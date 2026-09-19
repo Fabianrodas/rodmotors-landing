@@ -1,6 +1,27 @@
-# Rod Motors, reglas del repo
+## Development
 
-Pega este contenido al final del `CLAUDE.md` que genera Astro al crear el proyecto (no lo reemplaces: el de Astro trae notas útiles del framework, como usar `astro dev --background`).
+When starting the dev server, use background mode:
+
+```
+astro dev --background
+```
+
+Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
+
+## Documentation
+
+Full documentation: https://docs.astro.build
+
+Consult these guides before working on related tasks:
+
+- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
+- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
+- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
+- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
+- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
+- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+
+# Rod Motors, reglas del repo
 
 ## Qué es esto
 

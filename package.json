@@ -1,0 +1,41 @@
+{
+  "name": "rodmotors-landing",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "vitest run tests/unit",
+    "test:build": "npm run build && vitest run tests/build",
+    "test:e2e": "playwright test",
+    "verify": "npm run check && npm run build && vitest run",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@iconify-json/ph": "^1.2.2",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.3.3",
+    "astro-icon": "^1.2.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "allowScripts": {
+    "esbuild": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
+    "node-html-parser": "^9.0.4",
+    "prettier": "^3.9.8",
+    "prettier-plugin-astro": "^1.0.1",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.1"
+  }
+}
