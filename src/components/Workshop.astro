@@ -1,0 +1,93 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import alineadoraPhoto from '../assets/photos/alineadora.jpg';
+import equipoPhoto from '../assets/photos/equipo.jpg';
+import pesadosPhoto from '../assets/photos/pesados.jpg';
+import { site } from '../data/site';
+
+const videos = site.youtubeIds.map((id) => ({
+  id,
+  thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+  url: `https://www.youtube.com/watch?v=${id}`,
+}));
+---
+
+<section id="taller" class="bg-brand py-16 text-on-brand">
+  <div class="mx-auto max-w-[1400px] px-4">
+    <h2 class="display max-w-[22ch] text-3xl md:text-4xl">Técnicos, equipos y bahías para trabajo pesado</h2>
+    <p class="mt-4 max-w-[60ch] text-on-brand/75">
+      Somos un equipo de técnicos automotrices con diagnóstico computarizado y alineación computarizada en el taller de
+      Samanes 5. Trabajamos mecánica preventiva y correctiva en livianos, semipesados y pesados.
+    </p>
+
+    <div class="mt-8 grid gap-4 md:grid-cols-12">
+      <Image
+        src={pesadosPhoto}
+        alt={`Camión en la bahía de trabajo pesado de ${site.name}`}
+        widths={[640, 960, 1600]}
+        sizes="(min-width: 768px) 58vw, 100vw"
+        loading="lazy"
+        class="h-full w-full object-cover md:col-span-7"
+        data-placeholder
+      />
+      <Image
+        src={equipoPhoto}
+        alt={`Técnico de ${site.name} trabajando en el motor de una camioneta`}
+        widths={[480, 720, 1200]}
+        sizes="(min-width: 768px) 40vw, 100vw"
+        loading="lazy"
+        class="h-full w-full object-cover md:col-span-5"
+        data-placeholder
+      />
+      <Image
+        src={alineadoraPhoto}
+        alt="Alineadora computarizada midiendo la geometría de las ruedas"
+        widths={[480, 720, 1200]}
+        sizes="(min-width: 768px) 33vw, 100vw"
+        loading="lazy"
+        class="aspect-[4/3] w-full object-cover md:col-span-4 md:aspect-video"
+        data-placeholder
+      />
+
+      {videos.map((video) => (
+        <div class="relative aspect-video bg-brand-soft md:col-span-4" data-video data-id={video.id} data-title={`Video del taller ${site.name}`}>
+          <img
+            src={video.thumbnail}
+            alt=""
+            aria-hidden="true"
+            width="480"
+            height="360"
+            loading="lazy"
+            decoding="async"
+            class="h-full w-full object-cover"
+          />
+          <button type="button" class="absolute inset-0 flex items-center justify-center bg-brand/35" data-video-boton>
+            <span class="flex items-center gap-2 bg-accent px-4 py-2 font-semibold text-on-accent">
+              <Icon name="ph:play" class="size-5" aria-hidden="true" />
+              Ver video del taller
+            </span>
+          </button>
+          <noscript>
+            <a class="absolute inset-0 flex items-end p-3 text-accent underline" href={video.url}>Ver en YouTube</a>
+          </noscript>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  for (const container of document.querySelectorAll<HTMLElement>('[data-video]')) {
+    const boton = container.querySelector<HTMLButtonElement>('[data-video-boton]');
+    boton?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${container.dataset.id}?autoplay=1`;
+      iframe.title = container.dataset.title ?? '';
+      iframe.allow = 'accelerometer; autoplay; encrypted-media; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.className = 'absolute inset-0 h-full w-full border-0';
+      container.replaceChildren(iframe);
+    });
+  }
+</script>
