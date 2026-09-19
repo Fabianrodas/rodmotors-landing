@@ -1,0 +1,20 @@
+---
+import { site } from '../data/site';
+---
+
+<section id="guia" class="mx-auto max-w-[1400px] px-4 py-16">
+  <div class="grid gap-8 md:grid-cols-12">
+    <div class="md:col-span-4">
+      <h2 class="display text-3xl md:text-4xl">Cada cuánto revisar</h2>
+      <p class="mt-4 text-muted">Lo que más nos preguntan en el taller, resumido.</p>
+    </div>
+    <dl class="grid gap-6 md:col-span-8 md:grid-cols-2">
+      {site.guide.map((item) => (
+        <div class="border-t border-line pt-4">
+          <dt class="font-semibold">{item.title}</dt>
+          <dd class="numeric mt-1 text-muted">{item.body}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
