@@ -1,13 +1,15 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { site } from '../data/site';
-import { formatOpenStatus, getOpenStatus, groupSchedule } from '../lib/hours';
+import { formatOpenStatus, groupSchedule } from '../lib/hours';
 
 const rows = groupSchedule(site.schedule);
 const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${site.geo.lat}%2C${site.geo.lng}`;
 const wazeUrl = `https://waze.com/ul?ll=${site.geo.lat}%2C${site.geo.lng}&navigate=yes`;
 const embedUrl = `https://www.google.com/maps?q=${site.geo.lat},${site.geo.lng}&z=17&output=embed`;
-const initialStatus = formatOpenStatus(getOpenStatus(new Date(), site.schedule));
+// El HTML es estático y se cachea: el estado real lo pone el script con la hora de quien visita.
+// Sin JavaScript queda el texto neutro, nunca un 'Abierto' o 'Cerrado' viejo.
+const initialStatus = formatOpenStatus({ kind: 'unknown' });
 ---
 
 <section id="ubicacion" class="mx-auto max-w-[1400px] px-4 py-16">
@@ -57,8 +59,7 @@ const initialStatus = formatOpenStatus(getOpenStatus(new Date(), site.schedule))
   import { formatOpenStatus, getOpenStatus } from '../lib/hours';
   import { site } from '../data/site';
 
-  // El servidor ya renderiza el estado en build con la hora de compilación; esto lo
-  // refresca con la hora real del navegador de quien visita la página.
+  // Estado real con la hora de quien visita (el HTML trae un texto neutro).
   const label = document.querySelector<HTMLElement>('#estado-horario [data-label]');
   if (label) label.textContent = formatOpenStatus(getOpenStatus(new Date(), site.schedule));
 
@@ -73,5 +74,6 @@ const initialStatus = formatOpenStatus(getOpenStatus(new Date(), site.schedule))
     iframe.className = 'absolute inset-0 h-full w-full border-0';
     mapa!.appendChild(iframe);
     boton.remove();
+    iframe.focus();
   });
 </script>

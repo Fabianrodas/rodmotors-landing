@@ -7,9 +7,11 @@ import { buildAutoRepairJsonLd } from '../lib/schema';
 interface Props {
   title: string;
   description?: string;
+  /** Páginas que no deben indexarse (la 404): sin canonical ni og:url. */
+  noindex?: boolean;
 }
 
-const { title, description = site.description } = Astro.props;
+const { title, description = site.description, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
 const ogImage = new URL('/og.jpg', Astro.site ?? site.url).href;
 const jsonLd = JSON.stringify(buildAutoRepairJsonLd(site, ogImage));
@@ -22,14 +24,14 @@ const jsonLd = JSON.stringify(buildAutoRepairJsonLd(site, ogImage));
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
     <link rel="preload" href={archivoWoff2} as="font" type="font/woff2" crossorigin="anonymous" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_EC" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {!noindex && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

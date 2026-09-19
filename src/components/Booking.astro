@@ -27,7 +27,7 @@ import { VEHICLE_LABELS, VEHICLE_TYPES } from '../lib/whatsapp';
         <legend class="font-semibold">Tipo de vehículo</legend>
         <div class="mt-3 flex flex-wrap gap-3">
           {VEHICLE_TYPES.map((type, index) => (
-            <label class="flex min-h-11 cursor-pointer items-center gap-2 border border-field px-4 py-2 has-checked:border-accent has-checked:bg-accent has-checked:text-on-accent has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-(--focus-ring)">
+            <label class="flex min-h-11 cursor-pointer items-center gap-2 border border-field px-4 py-2 has-checked:border-ink has-checked:bg-accent has-checked:text-on-accent has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-(--focus-ring)">
               <input class="sr-only" type="radio" name="vehicleType" value={type} checked={index === 0} />
               <Icon name={type === 'liviano' ? 'ph:car-profile' : type === 'semipesado' ? 'ph:van' : 'ph:truck'} class="size-5" aria-hidden="true" />
               {VEHICLE_LABELS[type]}
@@ -52,7 +52,7 @@ import { VEHICLE_LABELS, VEHICLE_TYPES } from '../lib/whatsapp';
 
         <p class="grid gap-2">
           <label class="font-semibold" for="vehicle">Marca y modelo</label>
-          <input class="min-h-11 border border-field bg-canvas px-3 py-2" id="vehicle" name="vehicle" placeholder="Hino 500, 2019" />
+          <input class="min-h-11 border border-field bg-canvas px-3 py-2" id="vehicle" name="vehicle" maxlength="60" placeholder="Hino 500, 2019" />
         </p>
 
         <p class="grid gap-2">

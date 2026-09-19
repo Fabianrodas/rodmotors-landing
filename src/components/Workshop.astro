@@ -88,6 +88,7 @@ const videos = site.youtubeIds.map((id) => ({
       iframe.allowFullscreen = true;
       iframe.className = 'absolute inset-0 h-full w-full border-0';
       container.replaceChildren(iframe);
+      iframe.focus();
     });
   }
 </script>

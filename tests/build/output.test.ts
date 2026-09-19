@@ -1,5 +1,7 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { parse } from 'node-html-parser';
+import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
 
 const html = readFileSync(new URL('../../dist/index.html', import.meta.url), 'utf8');
@@ -59,5 +61,18 @@ describe('reglas anti plantilla (taste-skill)', () => {
   it('no deja fotos provisionales en el build de lanzamiento', () => {
     if (!process.env.LAUNCH) return;
     expect(doc.querySelectorAll('[data-placeholder]')).toHaveLength(0);
+  });
+  it('las fotos y la imagen social tienen contenido real, no un gris plano', async () => {
+    if (!process.env.LAUNCH) return;
+    const photos = new URL('../../src/assets/photos/', import.meta.url);
+    const files = [
+      ...readdirSync(photos).map((name) => fileURLToPath(new URL(name, photos))),
+      fileURLToPath(new URL('../../public/og.jpg', import.meta.url)),
+    ];
+    for (const file of files) {
+      // Los provisionales son de un solo color: su desviación estándar es 0.
+      const { channels } = await sharp(file).stats();
+      expect(Math.max(...channels.map((channel) => channel.stdev)), file).toBeGreaterThan(8);
+    }
   });
 });
