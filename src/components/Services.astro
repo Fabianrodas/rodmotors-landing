@@ -1,0 +1,85 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import diagnosticoPhoto from '../assets/photos/diagnostico.jpg';
+import { site } from '../data/site';
+
+const [mantenimiento, motor, tren] = site.serviceGroups;
+const vehicleIcons = ['ph:car-profile', 'ph:van', 'ph:truck'];
+---
+
+<section id="servicios" class="mx-auto max-w-[1400px] px-4 py-16">
+  <h2 class="display max-w-[20ch] text-3xl md:text-4xl">Lo que hacemos en el taller</h2>
+
+  <div class="mt-8 grid gap-4 md:grid-cols-12">
+    <article class="bg-surface p-6 md:col-span-5">
+      <h3 class="flex items-center gap-3 text-xl font-semibold">
+        <Icon name={mantenimiento.icon} class="size-6 text-muted" aria-hidden="true" />
+        {mantenimiento.title}
+      </h3>
+      <ul class="mt-4 grid gap-4">
+        {mantenimiento.services.map((service) => (
+          <li>
+            <p class="font-medium">{service.name}</p>
+            <p class="text-muted">{service.summary}</p>
+          </li>
+        ))}
+      </ul>
+    </article>
+
+    <div class="md:col-span-3 md:row-span-2">
+      <Image
+        src={diagnosticoPhoto}
+        alt={`Técnico de ${site.name} conectando el escáner de diagnóstico a un vehículo`}
+        widths={[400, 600, 900]}
+        sizes="(min-width: 768px) 25vw, 100vw"
+        loading="lazy"
+        class="aspect-[4/3] h-full w-full object-cover md:aspect-auto"
+        data-placeholder
+      />
+    </div>
+
+    <article class="bg-surface p-6 md:col-span-4">
+      <h3 class="flex items-center gap-3 text-xl font-semibold">
+        <Icon name={motor.icon} class="size-6 text-muted" aria-hidden="true" />
+        {motor.title}
+      </h3>
+      <ul class="mt-4 grid gap-4">
+        {motor.services.map((service) => (
+          <li>
+            <p class="font-medium">{service.name}</p>
+            <p class="text-muted">{service.summary}</p>
+          </li>
+        ))}
+      </ul>
+    </article>
+
+    <article class="bg-surface p-6 md:col-span-5">
+      <h3 class="flex items-center gap-3 text-xl font-semibold">
+        <Icon name={tren.icon} class="size-6 text-muted" aria-hidden="true" />
+        {tren.title}
+      </h3>
+      <ul class="mt-4 grid gap-4 sm:grid-cols-2">
+        {tren.services.map((service) => (
+          <li>
+            <p class="font-medium">{service.name}</p>
+            <p class="text-muted">{service.summary}</p>
+          </li>
+        ))}
+      </ul>
+    </article>
+
+    <article class="border border-accent bg-accent/10 p-6 md:col-span-4">
+      <h3 class="text-xl font-semibold">Atendemos todos los tamaños</h3>
+      <ul class="mt-4 grid gap-3">
+        {site.vehicleTypes.map((type, index) => (
+          <li class="flex items-center gap-3">
+            <Icon name={vehicleIcons[index]} class="size-6 text-accent-strong" aria-hidden="true" />
+            {type}
+          </li>
+        ))}
+      </ul>
+      <p class="mt-4 text-muted">Todas las marcas, con más de {site.yearsExperience} años de experiencia.</p>
+    </article>
+  </div>
+</section>
