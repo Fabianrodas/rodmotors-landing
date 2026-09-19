@@ -52,7 +52,9 @@ describe('reglas anti plantilla (taste-skill)', () => {
       .querySelectorAll('a, button')
       .map((el) => el.structuredText.trim().toLowerCase())
       .filter((text) => text.includes('whatsapp') || text.includes('escríbenos') || text.includes('contáctanos'));
-    expect(new Set(labels).size).toBeLessThanOrEqual(1);
+    expect(new Set(labels)).toEqual(new Set(['agendar por whatsapp']));
+    // header, hero y formulario como mínimo
+    expect(labels.length).toBeGreaterThanOrEqual(3);
   });
   it('no deja fotos provisionales en el build de lanzamiento', () => {
     if (!process.env.LAUNCH) return;

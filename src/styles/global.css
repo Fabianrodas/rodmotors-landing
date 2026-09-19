@@ -72,8 +72,18 @@
     font-family: var(--font-sans);
     font-synthesis-weight: none;
   }
+  /* El anillo de foco toma el ámbar que contrasta con el fondo en que está:
+     accent-strong sobre canvas y surface, accent sobre el azul de marca (3:1 o más, WCAG 1.4.11). */
+  html,
+  .bg-canvas,
+  .bg-surface {
+    --focus-ring: var(--accent-strong);
+  }
+  .bg-brand {
+    --focus-ring: var(--accent);
+  }
   :focus-visible {
-    outline: 3px solid var(--accent-strong);
+    outline: 3px solid var(--focus-ring);
     outline-offset: 2px;
   }
   /* El gris por defecto del navegador no llega a 4.5:1 sobre canvas; muted sí, en los dos modos. */

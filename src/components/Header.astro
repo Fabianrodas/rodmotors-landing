@@ -11,11 +11,11 @@ const links = [
 
 <header class="sticky top-0 z-10 bg-brand text-on-brand">
   <div class="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4">
-    <a class="display text-xl" href="/">{site.name}</a>
+    <a class="display inline-flex min-h-11 items-center text-xl" href="/">{site.name}</a>
 
     <nav class="hidden items-center gap-6 md:flex" aria-label="Secciones">
-      {links.map((link) => <a class="text-on-brand/80 hover:text-on-brand" href={link.href}>{link.label}</a>)}
-      <a class="inline-flex items-center gap-2 bg-accent px-4 py-2 font-semibold text-on-accent" href="#agendar">
+      {links.map((link) => <a class="inline-flex min-h-11 items-center text-on-brand/80 hover:text-on-brand" href={link.href}>{link.label}</a>)}
+      <a class="inline-flex min-h-11 items-center gap-2 bg-accent px-4 py-2 font-semibold text-on-accent transition-transform duration-200 hover:-translate-y-px active:translate-y-px" href="#agendar">
         <Icon name="ph:whatsapp-logo" class="size-5" aria-hidden="true" />
         Agendar por WhatsApp
       </a>
