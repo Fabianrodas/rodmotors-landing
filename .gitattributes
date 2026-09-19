@@ -1,0 +1,3 @@
+# Cloudflare y Netlify leen estos archivos línea por línea: siempre LF, también en Windows.
+public/_redirects text eol=lf
+public/_headers text eol=lf
