@@ -1,1 +1,102 @@
 @import "tailwindcss";
+@import "@fontsource-variable/archivo/wdth.css";
+
+/* Azul oscuro de marca como color principal, grises fríos de taller y un solo acento
+   ámbar de señalización para las acciones. */
+:root {
+  color-scheme: light dark;
+  --canvas: #eef1f4;
+  --surface: #f9fafb;
+  --line: #ccd5de;
+  --field: #76838f;
+  --muted: #4a5765;
+  --ink: #13233c;
+  --brand: #13233c;
+  --on-brand: #eef2f7;
+  --accent: #e0a82e;
+  --on-accent: #13233c;
+  --accent-strong: #7d5610;
+  --brand-soft: #25394f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --canvas: #0e1a2b;
+    --surface: #152438;
+    --line: #27374c;
+    --field: #6b7b90;
+    --muted: #a2b0c1;
+    --ink: #e8eef5;
+    --brand: #17273f;
+    --on-brand: #eef2f7;
+    --accent: #e3ad3b;
+    --on-accent: #0e1a2b;
+    --accent-strong: #eab957;
+    --brand-soft: #25394f;
+  }
+}
+
+/* Sin paleta por defecto de Tailwind: obliga a usar los tokens de marca. */
+@theme {
+  --color-*: initial;
+  --font-*: initial;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-field: var(--field);
+  --color-muted: var(--muted);
+  --color-ink: var(--ink);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-brand: var(--brand);
+  --color-on-brand: var(--on-brand);
+  --color-brand-soft: var(--brand-soft);
+  --font-sans: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+  }
+  :focus-visible {
+    outline: 3px solid var(--accent-strong);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background-color: var(--accent);
+    color: var(--on-accent);
+  }
+}
+
+@utility display {
+  font-stretch: 118%;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+@utility numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
