@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* El plan y el spec citan clases en su texto: que no terminen en el CSS del sitio. */
+@source not "../../docs";
 @import "@fontsource-variable/archivo/wdth.css";
 
 /* Azul oscuro de marca como color principal, grises fríos de taller y un solo acento
@@ -61,6 +63,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* El header fijo mide 4rem: las anclas y el foco no quedan debajo de él. */
+    scroll-padding-top: 4rem;
   }
   body {
     background-color: var(--canvas);
@@ -88,6 +92,22 @@
 
 @utility numeric {
   font-variant-numeric: tabular-nums;
+}
+
+/* El único momento orquestado de la página (spec 7.4): la entrada del texto del hero.
+   Solo existe si la persona no pidió reducir el movimiento. */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-in {
+    animation: hero-in 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--hero-step, 0) * 90ms);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import heroPhoto from '../assets/photos/hero.jpg';
+import { site } from '../data/site';
+---
+
+<!--
+  Variante B, aprobada en el canvas de diseño: foto de bahía a ancho completo con un
+  panel sólido de azul de marca (sin degradado) sobre la izquierda. En celular el texto
+  va apilado sobre fondo de marca y la foto queda debajo.
+-->
+<section class="relative isolate md:h-[clamp(520px,calc(100svh_-_4rem),760px)]">
+  <div class="flex flex-col md:block">
+    <div class="order-2 md:order-none md:absolute md:inset-0">
+      <Image
+        src={heroPhoto}
+        alt={`Bahía de servicio de ${site.name} con un vehículo en el elevador`}
+        widths={[640, 960, 1280, 1600, 1920]}
+        sizes="100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="h-64 w-full object-cover md:h-full"
+        data-placeholder
+      />
+    </div>
+
+    <div class="relative z-10 order-1 bg-brand px-4 py-12 text-on-brand md:absolute md:inset-y-0 md:left-0 md:order-none md:flex md:w-[62%] md:items-center md:px-10 md:py-0 lg:w-[55%] lg:px-14 xl:px-16">
+      <div class="mx-auto max-w-[46ch] md:mx-0 md:max-w-none">
+        <h1 class="hero-in display text-4xl md:text-[clamp(2.25rem,4vw,3.75rem)]">Taller automotriz en Samanes 5</h1>
+        <p class="hero-in mt-5 max-w-[42ch] text-lg text-on-brand/80 [--hero-step:1]">
+          Mantenimiento, diagnóstico computarizado y reparación para livianos, semipesados y pesados. Todas las marcas.
+        </p>
+        <div class="hero-in mt-8 flex flex-wrap items-center gap-4 [--hero-step:2]">
+          <a
+            href="#agendar"
+            class="inline-flex items-center gap-2 bg-accent px-5 py-3 font-semibold text-on-accent transition-transform duration-200 hover:-translate-y-px active:translate-y-px"
+          >
+            <Icon name="ph:whatsapp-logo" class="size-5" aria-hidden="true" />
+            Agendar por WhatsApp
+          </a>
+          <a href="#ubicacion" class="text-on-brand underline underline-offset-4">Cómo llegar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

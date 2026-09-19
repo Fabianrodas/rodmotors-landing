@@ -1,0 +1,41 @@
+---
+import { Icon } from 'astro-icon/components';
+import { site } from '../data/site';
+
+const links = [
+  { href: '#servicios', label: 'Servicios' },
+  { href: '#taller', label: 'El taller' },
+  { href: '#ubicacion', label: 'Ubicación' },
+];
+---
+
+<header class="sticky top-0 z-10 bg-brand text-on-brand">
+  <div class="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4">
+    <a class="display text-xl" href="/">{site.name}</a>
+
+    <nav class="hidden items-center gap-6 md:flex" aria-label="Secciones">
+      {links.map((link) => <a class="text-on-brand/80 hover:text-on-brand" href={link.href}>{link.label}</a>)}
+      <a class="inline-flex items-center gap-2 bg-accent px-4 py-2 font-semibold text-on-accent" href="#agendar">
+        <Icon name="ph:whatsapp-logo" class="size-5" aria-hidden="true" />
+        Agendar por WhatsApp
+      </a>
+    </nav>
+
+    <details class="relative md:hidden" data-menu>
+      <summary class="flex size-11 cursor-pointer items-center justify-center border border-on-brand/30" aria-label="Abrir menú">
+        <Icon name="ph:list" class="size-5" aria-hidden="true" />
+      </summary>
+      <nav class="absolute right-0 mt-2 grid w-56 gap-1 border border-line bg-surface p-3 text-ink" aria-label="Secciones">
+        {links.map((link) => <a class="flex min-h-11 items-center px-2" href={link.href}>{link.label}</a>)}
+      </nav>
+    </details>
+  </div>
+</header>
+
+<script>
+  // Cierra el menú de celular al elegir una sección, para que no tape el destino.
+  const menu = document.querySelector<HTMLDetailsElement>('[data-menu]');
+  menu?.addEventListener('click', (event) => {
+    if (event.target instanceof Element && event.target.closest('a')) menu.open = false;
+  });
+</script>
