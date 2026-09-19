@@ -2,10 +2,16 @@
 import { Icon } from 'astro-icon/components';
 import { site } from '../data/site';
 
+interface Props {
+  /** Prefijo de las anclas: vacío en la portada, "/" en páginas donde las secciones no existen (404). */
+  anchorBase?: string;
+}
+
+const { anchorBase = '' } = Astro.props;
 const links = [
-  { href: '#servicios', label: 'Servicios' },
-  { href: '#taller', label: 'El taller' },
-  { href: '#ubicacion', label: 'Ubicación' },
+  { href: `${anchorBase}#servicios`, label: 'Servicios' },
+  { href: `${anchorBase}#taller`, label: 'El taller' },
+  { href: `${anchorBase}#ubicacion`, label: 'Ubicación' },
 ];
 ---
 
@@ -15,7 +21,7 @@ const links = [
 
     <nav class="hidden items-center gap-6 md:flex" aria-label="Secciones">
       {links.map((link) => <a class="inline-flex min-h-11 items-center text-on-brand/80 hover:text-on-brand" href={link.href}>{link.label}</a>)}
-      <a class="inline-flex min-h-11 items-center gap-2 bg-accent px-4 py-2 font-semibold text-on-accent transition-transform duration-200 hover:-translate-y-px active:translate-y-px" href="#agendar">
+      <a class="inline-flex min-h-11 items-center gap-2 bg-accent px-4 py-2 font-semibold text-on-accent transition-transform duration-200 hover:-translate-y-px active:translate-y-px" href={`${anchorBase}#agendar`}>
         <Icon name="ph:whatsapp-logo" class="size-5" aria-hidden="true" />
         Agendar por WhatsApp
       </a>

@@ -66,6 +66,12 @@
     /* El header fijo mide 4rem: las anclas y el foco no quedan debajo de él. */
     scroll-padding-top: 4rem;
   }
+  /* En celular la barra fija inferior (MobileBar) tampoco puede tapar el foco. */
+  @media (width < 48rem) {
+    html {
+      scroll-padding-bottom: 4.5rem;
+    }
+  }
   body {
     background-color: var(--canvas);
     color: var(--ink);

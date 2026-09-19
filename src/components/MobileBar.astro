@@ -1,0 +1,22 @@
+---
+import { Icon } from 'astro-icon/components';
+import { site } from '../data/site';
+
+interface Props {
+  /** Igual que en Header: "/" donde la sección #agendar no existe. */
+  anchorBase?: string;
+}
+
+const { anchorBase = '' } = Astro.props;
+---
+
+<div class="fixed inset-x-0 bottom-0 z-20 grid grid-cols-[auto_1fr] border-t border-line bg-canvas md:hidden">
+  <a class="flex items-center justify-center gap-2 px-6 py-4 font-semibold" href={`tel:${site.phoneE164}`}>
+    <Icon name="ph:phone" class="size-5" aria-hidden="true" />
+    Llamar
+  </a>
+  <a class="flex items-center justify-center gap-2 bg-accent px-4 py-4 font-semibold whitespace-nowrap text-on-accent" href={`${anchorBase}#agendar`}>
+    <Icon name="ph:whatsapp-logo" class="size-5" aria-hidden="true" />
+    Agendar por WhatsApp
+  </a>
+</div>

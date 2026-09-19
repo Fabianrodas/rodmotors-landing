@@ -1,0 +1,30 @@
+---
+import { Icon } from 'astro-icon/components';
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-brand py-10 pb-24 text-on-brand md:pb-10">
+  <div class="mx-auto grid max-w-[1400px] gap-6 px-4 md:grid-cols-3">
+    <div>
+      <p class="display text-xl">{site.name}</p>
+      <p class="text-on-brand/70">Antes {site.legacyName}</p>
+    </div>
+    <div class="text-on-brand/80">
+      <p>{site.address.street}</p>
+      <p>{site.address.reference}, {site.address.city}</p>
+    </div>
+    <div class="grid gap-2">
+      <a class="numeric flex min-h-11 items-center gap-2 text-accent" href={`tel:${site.phoneE164}`}>
+        <Icon name="ph:phone" class="size-5" aria-hidden="true" />
+        {site.phoneDisplay}
+      </a>
+      <a class="flex min-h-11 items-center gap-2 text-accent" href={site.instagram.url}>
+        <Icon name="ph:instagram-logo" class="size-5" aria-hidden="true" />
+        {site.instagram.handle}
+      </a>
+    </div>
+  </div>
+  <p class="numeric mx-auto mt-8 max-w-[1400px] px-4 text-sm text-on-brand/60">{year} {site.name}, Guayaquil, Ecuador</p>
+</footer>
