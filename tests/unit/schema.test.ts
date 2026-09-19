@@ -20,7 +20,7 @@ describe('buildAutoRepairJsonLd', () => {
     expect(jsonLd.geo).toEqual({ '@type': 'GeoCoordinates', latitude: -2.113483, longitude: -79.895025 });
   });
   it('es serializable sin perder datos', () => {
-    expect(JSON.parse(JSON.stringify(jsonLd))).toEqual(jsonLd);
+    expect(JSON.parse(JSON.stringify(jsonLd))).toStrictEqual(jsonLd);
   });
   it('publica todos los servicios', () => {
     expect((jsonLd.makesOffer as unknown[]).length).toBe(10);
