@@ -1,0 +1,143 @@
+---
+import { Icon } from 'astro-icon/components';
+import { site } from '../data/site';
+import { VEHICLE_LABELS, VEHICLE_TYPES } from '../lib/whatsapp';
+---
+
+<section id="agendar" class="mx-auto max-w-[1400px] px-4 py-16">
+  <div class="grid gap-8 md:grid-cols-12">
+    <div class="md:col-span-4">
+      <h2 class="display text-3xl md:text-4xl">Agenda tu cita</h2>
+      <p class="mt-4 text-muted">
+        Llena la orden de trabajo y se abre WhatsApp con los datos listos. Te confirmamos el turno por ahí mismo.
+      </p>
+      <p class="mt-4 text-sm text-muted">Nada se guarda en esta web. Los datos viajan solo en tu mensaje de WhatsApp.</p>
+    </div>
+
+    <form
+      class="bg-surface p-5 md:col-span-8 md:p-8"
+      method="get"
+      action={`https://wa.me/${site.whatsappNumber}`}
+      data-orden
+      novalidate
+    >
+      <p class="numeric border-b border-line pb-3 text-sm tracking-wide text-muted">Orden de trabajo</p>
+
+      <fieldset class="mt-5">
+        <legend class="font-semibold">Tipo de vehículo</legend>
+        <div class="mt-3 flex flex-wrap gap-3">
+          {VEHICLE_TYPES.map((type, index) => (
+            <label class="flex min-h-11 cursor-pointer items-center gap-2 border border-field px-4 py-2 has-checked:border-accent has-checked:bg-accent has-checked:text-on-accent has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent-strong">
+              <input class="sr-only" type="radio" name="vehicleType" value={type} checked={index === 0} />
+              <Icon name={type === 'liviano' ? 'ph:car-profile' : type === 'semipesado' ? 'ph:van' : 'ph:truck'} class="size-5" aria-hidden="true" />
+              {VEHICLE_LABELS[type]}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <div class="mt-6 grid gap-5 md:grid-cols-2">
+        <p class="grid gap-2">
+          <label class="font-semibold" for="service">Servicio</label>
+          <select class="min-h-11 border border-field bg-canvas px-3 py-2" id="service" name="service" required aria-describedby="error-service">
+            <option value="">Elige un servicio</option>
+            {site.serviceGroups.map((group) => (
+              <optgroup label={group.title}>
+                {group.services.map((service) => <option value={service.name}>{service.name}</option>)}
+              </optgroup>
+            ))}
+          </select>
+          <span class="text-sm text-accent-strong" id="error-service" data-error="service" hidden></span>
+        </p>
+
+        <p class="grid gap-2">
+          <label class="font-semibold" for="vehicle">Marca y modelo</label>
+          <input class="min-h-11 border border-field bg-canvas px-3 py-2" id="vehicle" name="vehicle" placeholder="Hino 500, 2019" />
+        </p>
+
+        <p class="grid gap-2">
+          <label class="font-semibold" for="plate">Placa</label>
+          <input class="numeric min-h-11 border border-field bg-canvas px-3 py-2" id="plate" name="plate" maxlength="10" aria-describedby="error-plate" />
+          <span class="text-sm text-accent-strong" id="error-plate" data-error="plate" hidden></span>
+        </p>
+
+        <p class="grid gap-2">
+          <label class="font-semibold" for="preferredDate">Día preferido</label>
+          <input class="numeric min-h-11 border border-field bg-canvas px-3 py-2" id="preferredDate" name="preferredDate" type="date" aria-describedby="error-preferredDate" />
+          <span class="text-sm text-accent-strong" id="error-preferredDate" data-error="preferredDate" hidden></span>
+        </p>
+
+        <p class="grid gap-2 md:col-span-2">
+          <label class="font-semibold" for="name">Tu nombre</label>
+          <input class="min-h-11 border border-field bg-canvas px-3 py-2" id="name" name="name" maxlength="60" />
+        </p>
+
+        <p class="grid gap-2 md:col-span-2">
+          <label class="font-semibold" for="notes">¿Qué le pasa al vehículo?</label>
+          <textarea class="border border-field bg-canvas px-3 py-2" id="notes" name="notes" rows="3" maxlength="300" aria-describedby="error-notes"></textarea>
+          <span class="text-sm text-accent-strong" id="error-notes" data-error="notes" hidden></span>
+        </p>
+      </div>
+
+      <button
+        class="mt-7 inline-flex items-center gap-2 bg-accent px-5 py-3 font-semibold text-on-accent transition-transform duration-200 hover:-translate-y-px active:translate-y-px"
+        type="submit"
+      >
+        <Icon name="ph:whatsapp-logo" class="size-5" aria-hidden="true" />
+        Agendar por WhatsApp
+      </button>
+    </form>
+  </div>
+</section>
+
+<script>
+  import { serviceNames, site } from '../data/site';
+  import { guayaquilIsoDate } from '../lib/hours';
+  import { buildWhatsAppUrl, composeBookingMessage, validateBooking } from '../lib/whatsapp';
+  import type { BookingField, BookingInput } from '../lib/whatsapp';
+
+  const form = document.querySelector<HTMLFormElement>('[data-orden]');
+  if (form) {
+    const dateField = form.querySelector<HTMLInputElement>('#preferredDate');
+    if (dateField) dateField.min = guayaquilIsoDate(new Date());
+
+    const showErrors = (errors: Partial<Record<BookingField, string>>) => {
+      for (const node of form.querySelectorAll<HTMLElement>('[data-error]')) {
+        const field = node.dataset.error as BookingField;
+        const message = errors[field];
+        node.textContent = message ?? '';
+        node.hidden = !message;
+        const input = form.elements.namedItem(field);
+        if (input instanceof HTMLElement) input.setAttribute('aria-invalid', message ? 'true' : 'false');
+      }
+      const first = Object.keys(errors)[0];
+      if (first) (form.elements.namedItem(first) as HTMLElement | null)?.focus();
+    };
+
+    form.addEventListener('submit', (event) => {
+      const data = new FormData(form);
+      const input: BookingInput = {
+        vehicleType: String(data.get('vehicleType') ?? ''),
+        service: String(data.get('service') ?? ''),
+        vehicle: String(data.get('vehicle') ?? ''),
+        plate: String(data.get('plate') ?? ''),
+        preferredDate: String(data.get('preferredDate') ?? ''),
+        name: String(data.get('name') ?? ''),
+        notes: String(data.get('notes') ?? ''),
+      };
+      const result = validateBooking(input, {
+        today: guayaquilIsoDate(new Date()),
+        schedule: site.schedule,
+        services: serviceNames,
+      });
+      if (!result.ok) {
+        event.preventDefault();
+        showErrors(result.errors);
+        return;
+      }
+      event.preventDefault();
+      showErrors({});
+      window.location.href = buildWhatsAppUrl(site.whatsappNumber, composeBookingMessage(result.booking, site.name));
+    });
+  }
+</script>

@@ -76,6 +76,11 @@
     outline: 3px solid var(--accent-strong);
     outline-offset: 2px;
   }
+  /* El gris por defecto del navegador no llega a 4.5:1 sobre canvas; muted sí, en los dos modos. */
+  ::placeholder {
+    color: var(--muted);
+    opacity: 1;
+  }
   ::selection {
     background-color: var(--accent);
     color: var(--on-accent);
