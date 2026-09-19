@@ -103,6 +103,14 @@
   }
 }
 
+/* Las secciones bajo el hero no se maquetan hasta acercarse a la pantalla: en celulares
+   lentos el primer layout de toda la página retrasaba la foto del hero (LCP) más de 1 s. */
+main > section:not(:first-child),
+body > footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
 @utility display {
   font-stretch: 118%;
   font-weight: 700;

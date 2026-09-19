@@ -39,7 +39,7 @@ import { VEHICLE_LABELS, VEHICLE_TYPES } from '../lib/whatsapp';
       <div class="mt-6 grid gap-5 md:grid-cols-2">
         <p class="grid gap-2">
           <label class="font-semibold" for="service">Servicio</label>
-          <select class="min-h-11 border border-field bg-canvas px-3 py-2" id="service" name="service" required aria-describedby="error-service">
+          <select class="min-h-11 border border-field aria-[invalid=true]:border-accent-strong bg-canvas px-3 py-2" id="service" name="service" aria-required="true" aria-describedby="error-service">
             <option value="">Elige un servicio</option>
             {site.serviceGroups.map((group) => (
               <optgroup label={group.title}>
@@ -57,24 +57,24 @@ import { VEHICLE_LABELS, VEHICLE_TYPES } from '../lib/whatsapp';
 
         <p class="grid gap-2">
           <label class="font-semibold" for="plate">Placa</label>
-          <input class="numeric min-h-11 border border-field bg-canvas px-3 py-2" id="plate" name="plate" maxlength="10" aria-describedby="error-plate" />
+          <input class="numeric min-h-11 border border-field aria-[invalid=true]:border-accent-strong bg-canvas px-3 py-2" id="plate" name="plate" maxlength="10" aria-describedby="error-plate" />
           <span class="text-sm text-accent-strong" id="error-plate" data-error="plate" hidden></span>
         </p>
 
         <p class="grid gap-2">
           <label class="font-semibold" for="preferredDate">Día preferido</label>
-          <input class="numeric min-h-11 border border-field bg-canvas px-3 py-2" id="preferredDate" name="preferredDate" type="date" aria-describedby="error-preferredDate" />
+          <input class="numeric min-h-11 border border-field aria-[invalid=true]:border-accent-strong bg-canvas px-3 py-2" id="preferredDate" name="preferredDate" type="date" aria-describedby="error-preferredDate" />
           <span class="text-sm text-accent-strong" id="error-preferredDate" data-error="preferredDate" hidden></span>
         </p>
 
         <p class="grid gap-2 md:col-span-2">
           <label class="font-semibold" for="name">Tu nombre</label>
-          <input class="min-h-11 border border-field bg-canvas px-3 py-2" id="name" name="name" maxlength="60" />
+          <input class="min-h-11 border border-field bg-canvas px-3 py-2" id="name" name="name" maxlength="60" autocomplete="name" />
         </p>
 
         <p class="grid gap-2 md:col-span-2">
           <label class="font-semibold" for="notes">¿Qué le pasa al vehículo?</label>
-          <textarea class="border border-field bg-canvas px-3 py-2" id="notes" name="notes" rows="3" maxlength="300" aria-describedby="error-notes"></textarea>
+          <textarea class="border border-field aria-[invalid=true]:border-accent-strong bg-canvas px-3 py-2" id="notes" name="notes" rows="3" maxlength="300" aria-describedby="error-notes"></textarea>
           <span class="text-sm text-accent-strong" id="error-notes" data-error="notes" hidden></span>
         </p>
       </div>
