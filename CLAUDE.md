@@ -63,7 +63,7 @@ LAUNCH=1 npm run test:build   # además falla si quedan fotos provisionales
 
 **Diseño**
 - Solo los tokens de `src/styles/global.css`. La paleta por defecto de Tailwind está apagada con `--color-*: initial`, así que `bg-slate-800` o `text-white` no existen y no se vuelven a encender.
-- Azul oscuro (`brand`, `ink`) es el color principal y domina header, "El taller" y pie, no solo el hero; `brand-soft` es el único tono derivado, para los recuadros de foto y video dentro de una sección `brand`. El ámbar (`accent`) es el único acento y solo marca acciones: CTA, foco, errores, nunca decorativo. Un solo sistema de esquinas (recto), un solo tema por página. Nada de negro ni blanco puros.
+- Azul oscuro (`brand`, `ink`) es el color principal y domina header, "El taller" y pie, no solo el hero; `brand-soft` es el único tono derivado, para los recuadros de foto y video dentro de una sección `brand`. El ámbar (`accent`) es el único acento y solo marca acciones: CTA, foco, errores. Dos excepciones, y solo esas dos, aprobadas en el spec y en el canvas de diseño: la celda "Atendemos todos los tamaños" en Servicios (`border-accent bg-accent/10`) y la pastilla de horario en Ubicación (`border-accent bg-accent/10 text-accent-strong`). Ninguna otra celda, tarjeta o pastilla nueva se tinta de ámbar sin pasar antes por el mismo proceso: spec, canvas, y anotarla aquí. Un solo sistema de esquinas (recto), un solo tema por página. Nada de negro ni blanco puros.
 - El hero es la **variante B**, aprobada en el canvas de diseño: foto a ancho completo con un panel `bg-brand` sólido (nunca semitransparente ni degradado) sobre la izquierda en escritorio; en celular el texto va apilado sobre fondo `brand` y la foto queda debajo.
 - Una sola familia tipográfica: Archivo Variable, self-hosted. Nunca `<link>` a Google Fonts.
 - Iconos solo de Phosphor (`ph:...`) vía astro-icon. Nunca dibujar paths de SVG a mano.
@@ -77,7 +77,7 @@ LAUNCH=1 npm run test:build   # además falla si quedan fotos provisionales
 - `site.reviews` vacío significa que la sección no se muestra. No la rellenes para "que no se vea vacía".
 
 **Fotos**
-- Las de `src/assets/photos/` son grises provisionales hasta que el cliente entregue las reales. No se sustituyen por fotos de stock ni de otros talleres.
+- Las de `src/assets/photos/` son una ilustración de marca provisional (un plano técnico de taller, en azul y ámbar), generada por `scripts/placeholder-photos.mjs`, hasta que el cliente entregue las fotos reales. No se sustituyen por fotos de stock ni de otros talleres: para un negocio real con nombre y dirección propios, una foto de otro taller pasada como si fuera el suyo es engañosa y un riesgo de derechos de autor, aunque sea "provisional". El reemplazo es directo: el día que lleguen las fotos reales, se sobrescribe cada `.jpg` en `src/assets/photos/` con el mismo nombre de archivo. Ningún componente cambia.
 - Toda imagen con contenido lleva `alt` descriptivo; las decorativas llevan `alt=""` y `aria-hidden="true"`.
 
 **No cambiar sin aprobación explícita del cliente**
