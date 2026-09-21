@@ -1,78 +1,99 @@
 ---
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import alineadoraPhoto from '../assets/photos/alineadora.jpg';
-import equipoPhoto from '../assets/photos/equipo.jpg';
-import pesadosPhoto from '../assets/photos/pesados.jpg';
+import posterSimulador from '../assets/video/t3sSL3RLqLA.jpg';
+import posterAlineacion from '../assets/video/nQSDrwFfDnI.jpg';
 import { site } from '../data/site';
+
+/**
+ * Pósters locales en vez de i.ytimg.com: quita una petición a un tercero en cada carga
+ * y, sobre todo, deja elegir el cuadro. Los de YouTube (hqdefault) son 4:3 y recortan
+ * mal un video vertical. Ver el origen de cada archivo en CLAUDE.md, sección Fotos.
+ */
+const posters: Record<string, ImageMetadata> = {
+  t3sSL3RLqLA: posterSimulador,
+  nQSDrwFfDnI: posterAlineacion,
+};
 
 const videos = site.youtubeIds.map((id) => ({
   id,
-  thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+  poster: posters[id],
   url: `https://www.youtube.com/watch?v=${id}`,
 }));
+
+/**
+ * Equipos, no servicios: el catálogo de Servicios dice qué hacemos, esto dice con qué.
+ * Los tres son reales y verificables (los dos primeros se deducen de los servicios
+ * computarizados del catálogo; el simulador se ve en los videos de aquí mismo). La
+ * descripción es de lo que hace el equipo, no una afirmación sobre el negocio.
+ * PENDIENTE: cuántas bahías y cuántos técnicos, a confirmar con el cliente.
+ */
+const equipos = [
+  { icon: 'ph:scan', name: 'Escáner de diagnóstico computarizado', body: 'Lee los códigos del sistema electrónico del vehículo.' },
+  { icon: 'ph:crosshair', name: 'Alineadora computarizada', body: 'Mide la geometría de las cuatro ruedas.' },
+  { icon: 'ph:waves', name: 'Simulador de suspensión', body: 'Prueba amortiguadores y suspensión con el vehículo sobre la plataforma.' },
+];
 ---
 
+<!--
+  Antes esta sección eran tres ilustraciones azules sobre fondo azul, unos 1400px de
+  alto que se leían como vacío. Salieron. Queda corta a propósito: sin fotos reales no
+  hay con qué llenarla sin inventar, y acortar una sección muerta es ganancia. Los dos
+  videos, que son lo único real que había aquí, pasan a su proporción vertical nativa.
+-->
 <section id="taller" class="bg-brand py-16 text-on-brand">
   <div class="mx-auto max-w-[1400px] px-4">
     <h2 class="display max-w-[22ch] text-3xl md:text-4xl">Técnicos, equipos y bahías para trabajo pesado</h2>
-    <p class="mt-4 max-w-[60ch] text-on-brand/75">
-      Somos un equipo de técnicos automotrices con diagnóstico computarizado y alineación computarizada en el taller de
-      Samanes 5. Trabajamos mecánica preventiva y correctiva en livianos, semipesados y pesados.
-    </p>
 
-    <div class="mt-8 grid gap-4 md:grid-cols-12">
-      <Image
-        src={pesadosPhoto}
-        alt={`Camión en la bahía de trabajo pesado de ${site.name}`}
-        widths={[640, 960, 1600]}
-        sizes="(min-width: 768px) 58vw, 100vw"
-        loading="lazy"
-        class="h-full w-full bg-brand-soft object-cover md:col-span-7"
-        data-placeholder
-      />
-      <Image
-        src={equipoPhoto}
-        alt={`Técnico de ${site.name} trabajando en el motor de una camioneta`}
-        widths={[480, 720, 1200]}
-        sizes="(min-width: 768px) 40vw, 100vw"
-        loading="lazy"
-        class="h-full w-full bg-brand-soft object-cover md:col-span-5"
-        data-placeholder
-      />
-      <Image
-        src={alineadoraPhoto}
-        alt="Alineadora computarizada midiendo la geometría de las ruedas"
-        widths={[480, 720, 1200]}
-        sizes="(min-width: 768px) 33vw, 100vw"
-        loading="lazy"
-        class="aspect-[4/3] w-full bg-brand-soft object-cover md:col-span-4 md:aspect-video"
-        data-placeholder
-      />
+    <div class="mt-8 grid gap-8 md:grid-cols-12 md:gap-4">
+      <div class="md:col-span-8">
+        <p class="max-w-[60ch] text-on-brand/75">
+          Somos un equipo de técnicos automotrices con diagnóstico computarizado y alineación computarizada en el taller de
+          Samanes 5. Trabajamos mecánica preventiva y correctiva en livianos, semipesados y pesados.
+        </p>
 
-      {videos.map((video) => (
-        <div class="relative aspect-video bg-brand-soft md:col-span-4" data-video data-id={video.id} data-title={`Video del taller ${site.name}`}>
-          <img
-            src={video.thumbnail}
-            alt=""
-            aria-hidden="true"
-            width="480"
-            height="360"
-            loading="lazy"
-            decoding="async"
-            class="h-full w-full object-cover"
-          />
-          <button type="button" class="absolute inset-0 flex items-center justify-center bg-brand/35" data-video-boton>
-            <span class="flex items-center gap-2 bg-accent px-4 py-2 font-semibold text-on-accent">
-              <Icon name="ph:play" class="size-5" aria-hidden="true" />
-              Ver video del taller
-            </span>
-          </button>
-          <noscript>
-            <a class="absolute inset-0 flex items-end p-3 text-accent underline" href={video.url}>Ver en YouTube</a>
-          </noscript>
-        </div>
-      ))}
+        <ul class="mt-8 grid gap-5">
+          {equipos.map((equipo) => (
+            <li class="flex gap-4 border-t border-on-brand/20 pt-5">
+              <Icon name={equipo.icon} class="size-7 shrink-0 text-accent" aria-hidden="true" />
+              <div>
+                <p class="font-semibold">{equipo.name}</p>
+                <p class="text-on-brand/75">{equipo.body}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 md:col-span-4">
+        {videos.map((video) => (
+          <div
+            class="relative aspect-[9/16] bg-brand-soft"
+            data-video
+            data-id={video.id}
+            data-title={`Video del taller ${site.name}`}
+          >
+            <Image
+              src={video.poster}
+              alt=""
+              aria-hidden="true"
+              widths={[240, 360, 478]}
+              sizes="(min-width: 768px) 17vw, 45vw"
+              loading="lazy"
+              class="h-full w-full object-cover"
+            />
+            <button type="button" class="absolute inset-0 flex items-end justify-center bg-brand/15 p-3" data-video-boton>
+              <span class="flex items-center gap-2 bg-accent px-3 py-2 text-sm font-semibold text-on-accent">
+                <Icon name="ph:play" class="size-4" aria-hidden="true" />
+                Ver video del taller
+              </span>
+            </button>
+            <noscript>
+              <a class="absolute inset-0 flex items-end p-3 text-accent underline" href={video.url}>Ver en YouTube</a>
+            </noscript>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 </section>

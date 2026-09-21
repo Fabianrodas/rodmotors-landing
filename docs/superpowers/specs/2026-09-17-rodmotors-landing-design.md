@@ -180,6 +180,38 @@ Español de Ecuador, frases cortas, voz activa, mayúscula solo al inicio. Cero 
 
 Se corrigen las faltas de ortografía del sitio actual y se conserva el contenido real (misión, catálogo, guía de mantenimiento).
 
+### 7.6 Revisión de ritmo y respaldo (2026-09-20)
+
+Con la landing ya construida y en verde, el cliente interno la describió como "muy simple y muerta". Se investigaron tres referencias antes de tocar nada: Studio y Salient de Tailwind (servicios y marketing, sin capturas de producto) y Christian Brothers Automotive (taller real, 310 locales). Las tres se apoyan en dos cosas que esta página no tenía.
+
+**Diagnóstico**
+
+1. Las imágenes ocupaban cerca del 60% del alto de la página. Siendo ilustración azul sobre azul, desaparecían dentro de las secciones `brand` y se leían como huecos dentro de las claras. Lo más vivo de la página era la miniatura de YouTube, la única imagen real.
+2. Cero respaldo visible. `site.reviews` está vacío por regla y el único dato de apoyo ("más de 10 años") vivía enterrado en una celda del bento.
+3. El marco de cada sección era idéntico: `py-16`, `h2` del mismo tamaño alineado a la izquierda, párrafo `muted`. Variaba el bloque interno, nunca la entrada. La afirmación de 7.3 sobre seis familias de layout se sostiene; lo uniforme era el marco, no los bloques.
+
+**Dos decisiones que enmiendan lo anterior**
+
+- **Se revisa la doctrina de 7.3** ("el elemento memorable, uno solo: la orden de trabajo; todo lo demás callado"). La página no falló su diseño: ejecutaba esa contención con fidelidad, y la contención se leía como muerte. Se admite **un segundo momento fuerte**, y es la guía de mantenimiento, el contenido más útil que tiene el taller. Sube de volumen solo con tipografía: `h2` a `text-4xl md:text-5xl`, término a `text-2xl md:text-3xl` en columna propia, aire de `py-20 md:py-28`. **No cambia de fondo**, porque qué secciones usan `bg-brand` no se toca sin el cliente.
+- **Se diseña para que las fotos no lleguen.** Mientras no haya material real, ese espacio lleva contenido, no ilustración de relleno. Si después llegan fotos, se suman como refuerzo.
+
+**Cambios por sección**
+
+| Sección | Antes | Ahora |
+|---|---|---|
+| (nueva) Respaldo | no existía | Banda de cuatro hechos reales bajo el hero, sobre `surface`, con divisores. Sin tarjetas. Solo datos de `site.ts` |
+| Servicios | bento de 5 celdas, una era foto alta (3x2) | bento de 4 celdas para 4 contenidos exactos. La celda ámbar se mudó al hueco alto, que le calza mejor a tres tipos apilados. Frenos se ensancha a 9 columnas |
+| El taller | 3 ilustraciones (unas 1400px de azul vacío) + 2 videos en cajas 16:9 con miniatura de `i.ytimg.com` | sin ilustraciones. Lista de equipos (con qué, no qué hacemos) + los 2 videos en su proporción vertical nativa, con póster local |
+| La guía | 4 columnas de texto plano | segundo momento fuerte, término grande a la izquierda y explicación a la derecha |
+
+**Pósters de video.** Salen de cuadros de los videos del propio canal Rod Motors, no de stock ni de otro taller. Las placas de los vehículos de clientes van difuminadas: son datos de terceros y no se publican. Viven en `src/assets/video/`, no en `src/assets/photos/`, porque **no son provisionales**: son reales y definitivos. De paso se elimina la petición a `i.ytimg.com` en cada carga.
+
+**Lo que NO se tocó**, por estar aprobado con el cliente: la variante B del hero, las anclas, `public/_redirects`, y qué secciones usan `bg-brand` (header, "El taller", pie).
+
+**Sin banda de CTA de cierre.** Salient y Christian Brothers cierran con una. Aquí se descartó: la página ya tiene CTA fijo en el header, CTA en el hero, la sección entera de la orden de trabajo, la barra fija en celular y el teléfono en el pie. Una sexta superficie de CTA sería copiar la referencia sin motivo.
+
+**Techo conocido del material de video.** Los dos videos del canal están en 478x850 como máximo, son verticales y tratan el mismo tema (simulador de suspensión). Alcanzan para pósters a tamaño nativo, no para el hero ni para seis ranuras distintas. Por eso se piden los archivos originales (punto 9 de la sección 14).
+
 ## 8. Contenido
 
 Todo el contenido vive en `src/data/site.ts`. Los servicios se agrupan en tres bloques (Mantenimiento; Diagnóstico y motor; Frenos, suspensión y dirección) porque diez ítems sueltos en una lista son ilegibles. La guía sale del artículo del blog actual, incluidos los intervalos de bujías que el negocio ya publica (cobre cada 20.000 km, iridio entre 80.000 y 100.000 km).
@@ -230,3 +262,7 @@ Cloudflare Workers con static assets (Cloudflare recomienda Workers por encima d
 6. Reseñas: ¿se pueden transcribir con nombre?
 7. ¿Se agrega algún servicio que hoy no está en los sitios (por ejemplo revisión técnica vehicular, grúa, repuestos)?
 8. Host: Cloudflare (implica mover nameservers) o Netlify.
+9. Archivos originales de los dos videos del canal Rod Motors. YouTube solo sirve 478x850; los originales de celular casi seguro son 1080x1920 y desbloquean pósters e imágenes mucho mejores.
+10. Fotos originales del Instagram @rodmotors.ec, en mejor calidad que un fotograma de video.
+11. Intervalos de mantenimiento que faltan en la guía: aceite, inyectores y cuerpo de aceleración. Hoy solo bujías tiene cifras, así que la guía no puede ser tabla de kilometrajes. No se inventan.
+12. Datos del taller para "El taller": cuántas bahías, cuántos técnicos, equipos por nombre, certificaciones y garantía si las hay.

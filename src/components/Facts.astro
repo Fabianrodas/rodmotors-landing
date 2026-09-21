@@ -1,0 +1,38 @@
+---
+import { Icon } from 'astro-icon/components';
+import { site } from '../data/site';
+
+/**
+ * Banda de respaldo, justo debajo del hero. Las tres referencias que se revisaron
+ * (Studio y Salient de Tailwind, Christian Brothers Automotive) ponen la prueba
+ * arriba de todo; esta página no tenía ninguna, porque site.reviews está vacío por
+ * regla y el único dato de respaldo vivía enterrado en una celda del bento.
+ *
+ * Solo hechos reales de site.ts. Nada de cifras inventadas, que es regla del repo.
+ * Cuando haya reseñas reales con permiso del cliente, van a su propia sección
+ * (Reviews.astro), no aquí.
+ */
+const facts = [
+  { icon: 'ph:calendar-check', text: `Más de ${site.yearsExperience} años de experiencia` },
+  { icon: 'ph:storefront', text: `El mismo taller, antes ${site.legacyName}` },
+  { icon: 'ph:car', text: 'Todas las marcas' },
+  { icon: 'ph:gauge', text: 'Diagnóstico y alineación computarizados' },
+];
+---
+
+<section aria-label="Respaldo del taller" class="border-b border-line bg-surface">
+  <ul class="mx-auto grid max-w-[1400px] divide-y divide-line px-4 md:grid-cols-4 md:divide-x md:divide-y-0">
+    {facts.map((fact, index) => (
+      <li
+        class:list={[
+          'flex items-center gap-3 py-5 md:py-6',
+          index === 0 ? 'md:pr-6' : 'md:px-6',
+          index === facts.length - 1 && 'md:pr-0',
+        ]}
+      >
+        <Icon name={fact.icon} class="size-5 shrink-0 text-muted" aria-hidden="true" />
+        <span class="font-semibold">{fact.text}</span>
+      </li>
+    ))}
+  </ul>
+</section>

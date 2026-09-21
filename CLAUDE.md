@@ -68,6 +68,7 @@ LAUNCH=1 npm run test:build   # además falla si quedan fotos provisionales
 - Una sola familia tipográfica: Archivo Variable, self-hosted. Nunca `<link>` a Google Fonts.
 - Iconos solo de Phosphor (`ph:...`) vía astro-icon. Nunca dibujar paths de SVG a mano.
 - Sin etiquetas en mayúsculas encima de los títulos, sin indicadores de scroll, sin filas de tres tarjetas iguales, sin tarjetas con borde más sombra por defecto.
+- Dos momentos fuertes, no uno. El spec original fijaba uno solo (la orden de trabajo) y esa contención se leía como página muerta; el 2026-09-20 se admitió un segundo, que es la guía de mantenimiento (spec 7.6). Su escala tipográfica mayor (`h2` a `text-4xl md:text-5xl`, término a `text-2xl md:text-3xl`) es deliberada, no una inconsistencia: no la normalices al tamaño de las demás secciones. Sube de volumen solo con tipografía, nunca cambiando de fondo.
 - Movimiento: entrada del hero y respuesta táctil de botones. Nada de revelados por scroll sección por sección. Todo detrás de `prefers-reduced-motion`.
 - Modo claro y oscuro se revisan los dos antes de dar algo por terminado.
 
@@ -77,7 +78,9 @@ LAUNCH=1 npm run test:build   # además falla si quedan fotos provisionales
 - `site.reviews` vacío significa que la sección no se muestra. No la rellenes para "que no se vea vacía".
 
 **Fotos**
-- Las de `src/assets/photos/` son una ilustración de marca provisional (un plano técnico de taller, en azul y ámbar), generada por `scripts/placeholder-photos.mjs`, hasta que el cliente entregue las fotos reales. No se sustituyen por fotos de stock ni de otros talleres: para un negocio real con nombre y dirección propios, una foto de otro taller pasada como si fuera el suyo es engañosa y un riesgo de derechos de autor, aunque sea "provisional". El reemplazo es directo: el día que lleguen las fotos reales, se sobrescribe cada `.jpg` en `src/assets/photos/` con el mismo nombre de archivo. Ningún componente cambia.
+- En `src/assets/photos/` quedan **solo dos** ilustraciones de marca provisionales (plano técnico de taller, azul y ámbar), generadas por `scripts/placeholder-photos.mjs`: `hero.jpg`, que es el fondo del hero, y `fachada.jpg`, que solo alimenta `public/og.jpg` y no se muestra en la página. Eran seis. El 2026-09-20 salieron cuatro: ocupaban cerca del 60% del alto y, siendo azul sobre azul, desaparecían en las secciones `brand` y se leían como huecos en las claras. Ese espacio pasó a tener contenido (spec 7.6). No las repongas para "llenar".
+- No se sustituyen por fotos de stock ni de otros talleres: para un negocio real con nombre y dirección propios, la foto de otro taller pasada como si fuera la suya es engañosa y un riesgo de derechos de autor, aunque sea "provisional". El reemplazo es directo: se sobrescribe el `.jpg` con el mismo nombre y ningún componente cambia.
+- `src/assets/video/` es **otra cosa y no es provisional**: son fotos reales del taller, cuadros de los videos del propio canal Rod Motors, con el nombre del archivo igual al id de YouTube. Sirven de póster de cada video. Las placas de los vehículos de clientes van difuminadas y así se quedan: son datos de terceros. No se vuelven a traer miniaturas de `i.ytimg.com`, que era una petición a un tercero en cada carga.
 - Toda imagen con contenido lleva `alt` descriptivo; las decorativas llevan `alt=""` y `aria-hidden="true"`.
 
 **No cambiar sin aprobación explícita del cliente**
