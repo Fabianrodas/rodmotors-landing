@@ -1,6 +1,7 @@
 @import "tailwindcss";
 /* El plan y el spec citan clases en su texto: que no terminen en el CSS del sitio. */
 @source not "../../docs";
+@source not "../../*.md";
 @import "@fontsource-variable/archivo/wdth.css";
 
 /* Azul oscuro de marca como color principal, grises fríos de taller y un solo acento
