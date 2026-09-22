@@ -1,0 +1,156 @@
+---
+/** Orden de trabajo: arma el mensaje y abre WhatsApp. No guarda nada en ningún servidor. */
+import { Icon } from 'astro-icon/components';
+import { site } from '../data/site';
+import { VEHICLE_LABELS, VEHICLE_TYPES } from '../lib/whatsapp';
+
+const vehicleIcons = { liviano: 'ph:car-profile', semipesado: 'ph:van', pesado: 'ph:truck' } as const;
+const steps = [
+  ['01', 'Llenas la orden', 'Vehículo, servicio y el día que te conviene.'],
+  ['02', 'Se abre WhatsApp', 'Con el mensaje ya escrito, solo lo envías.'],
+  ['03', 'Te confirmamos', 'El turno te llega por el mismo chat.'],
+];
+const label = 'mb-2.5 block font-mono text-[13px] tracking-[0.04em] text-etiqueta';
+const field =
+  'min-h-[52px] w-full border border-borde bg-fondo px-4 text-base text-claro placeholder:text-etiqueta aria-invalid:border-amarillo focus-visible:border-amarillo';
+const error = 'mt-2.5 flex items-center gap-2 text-sm text-amarillo';
+---
+
+<section id="agendar" class="bg-profundo px-5 py-[72px] lg:px-20 lg:py-28">
+  <div class="mx-auto flex max-w-[1280px] flex-col gap-9 lg:grid lg:grid-cols-12 lg:items-start lg:gap-6">
+    <div class="flex flex-col gap-3.5 lg:col-span-5 lg:gap-5 lg:pr-12">
+      <h2 class="titulo text-[38px] lg:text-[64px]">Agenda en un minuto</h2>
+      <p class="mb-3 text-base leading-relaxed text-apagado lg:text-[19px]">Llenas la orden de trabajo y se abre WhatsApp con los datos listos.</p>
+      <ol>
+        {
+          steps.map(([n, t, d]) => (
+            <li class="flex gap-5 border-t border-claro/12 py-5">
+              <span class="pt-0.5 font-mono text-[15px] text-amarillo">{n}</span>
+              <div>
+                <p class="mb-1.5 text-[17px] font-bold lg:text-[19px]">{t}</p>
+                <p class="text-[15px] leading-normal text-apagado">{d}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <form class="border border-claro/8 bg-superficie lg:col-span-7" method="get" action={`https://wa.me/${site.whatsappNumber}`} data-orden novalidate>
+      <div class="flex items-center justify-between border-b border-claro/10 px-5 py-[22px] lg:px-9">
+        <p class="text-lg font-extrabold lg:text-xl">Orden de trabajo</p>
+        <p class="font-mono text-[13px] text-etiqueta">Folio automático</p>
+      </div>
+
+      <div class="flex flex-col gap-[22px] px-5 py-7 lg:gap-[26px] lg:px-9">
+        <fieldset>
+          <legend class={label}>Tipo de vehículo</legend>
+          <div class="flex gap-2 lg:gap-3">
+            {
+              VEHICLE_TYPES.map((type, i) => (
+                <label class="flex min-h-[68px] flex-1 cursor-pointer flex-col items-center justify-center gap-1.5 border border-borde text-sm font-medium text-apagado has-checked:border-marca has-checked:bg-marca has-checked:font-bold has-checked:text-claro has-focus-visible:outline-3 has-focus-visible:outline-offset-2 has-focus-visible:outline-amarillo lg:min-h-14 lg:flex-row lg:gap-2.5 lg:text-base">
+                  <input class="sr-only" type="radio" name="vehicleType" value={type} checked={i === 0} />
+                  <Icon name={vehicleIcons[type]} class="size-[22px] text-amarillo" aria-hidden="true" />
+                  {VEHICLE_LABELS[type]}
+                </label>
+              ))
+            }
+          </div>
+          <p class={error} data-error="vehicleType" hidden></p>
+        </fieldset>
+
+        <div class="grid gap-5 lg:grid-cols-2">
+          <div>
+            <label for="service" class={label}>Servicio</label>
+            <select id="service" name="service" class={field} aria-required="true">
+              <option value="">Elige un servicio</option>
+              {
+                site.serviceGroups.map((group) => (
+                  <optgroup label={group.title}>
+                    {group.services.map((s) => (
+                      <option value={s.name}>{s.name}</option>
+                    ))}
+                  </optgroup>
+                ))
+              }
+            </select>
+            <p class={error} data-error="service" hidden></p>
+          </div>
+          <div>
+            <label for="vehicle" class={label}>Marca y modelo</label>
+            <input id="vehicle" name="vehicle" class={field} placeholder="Hino 500, 2019" autocomplete="off" />
+          </div>
+          <div>
+            <label for="plate" class={label}>Placa</label>
+            <input id="plate" name="plate" class={`${field} font-mono`} maxlength="10" autocomplete="off" />
+            <p class={error} data-error="plate" hidden></p>
+          </div>
+          <div>
+            <label for="preferredDate" class={label}>Día preferido</label>
+            <input id="preferredDate" name="preferredDate" type="date" class={`${field} font-mono`} />
+            <p class={error} data-error="preferredDate" hidden></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mx-5 h-px bg-[repeating-linear-gradient(90deg,rgb(255_255_255/0.35)_0_8px,transparent_8px_16px)] lg:mx-9" aria-hidden="true"></div>
+
+      <div class="flex flex-col gap-3.5 px-5 pt-[22px] pb-6 lg:px-9 lg:pt-[26px] lg:pb-[30px]">
+        <button type="submit" class="flex min-h-[60px] items-center justify-center gap-2.5 bg-amarillo text-[17px] font-extrabold text-tinta">
+          <Icon name="ph:whatsapp-logo" class="size-5" aria-hidden="true" />Agendar por WhatsApp
+        </button>
+        <p class="text-center text-sm leading-normal text-etiqueta">Nada se guarda en esta web. Los datos viajan solo en tu mensaje.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  import { serviceNames, site } from '../data/site';
+  import { guayaquilIsoDate } from '../lib/hours';
+  import { buildWhatsAppUrl, composeBookingMessage, validateBooking } from '../lib/whatsapp';
+  import type { BookingField, BookingInput } from '../lib/whatsapp';
+
+  const form = document.querySelector<HTMLFormElement>('[data-orden]');
+  if (form) {
+    const dateField = form.querySelector<HTMLInputElement>('#preferredDate');
+    if (dateField) dateField.min = guayaquilIsoDate(new Date());
+
+    const showErrors = (errors: Partial<Record<BookingField, string>>) => {
+      for (const node of form.querySelectorAll<HTMLElement>('[data-error]')) {
+        const key = node.dataset.error as BookingField;
+        const message = errors[key];
+        node.textContent = message ?? '';
+        node.hidden = !message;
+        const control = form.elements.namedItem(key);
+        const target = control instanceof RadioNodeList ? null : control;
+        if (target instanceof HTMLElement) {
+          target.setAttribute('aria-invalid', message ? 'true' : 'false');
+          if (message) target.setAttribute('aria-describedby', node.id || (node.id = `error-${key}`));
+        }
+      }
+      form.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const input: BookingInput = {
+        vehicleType: String(data.get('vehicleType') ?? ''),
+        service: String(data.get('service') ?? ''),
+        vehicle: String(data.get('vehicle') ?? ''),
+        plate: String(data.get('plate') ?? ''),
+        preferredDate: String(data.get('preferredDate') ?? ''),
+        name: '',
+        notes: '',
+      };
+      const result = validateBooking(input, { today: guayaquilIsoDate(new Date()), schedule: site.schedule, services: serviceNames });
+      if (!result.ok) {
+        showErrors(result.errors);
+        return;
+      }
+      showErrors({});
+      window.location.href = buildWhatsAppUrl(site.whatsappNumber, composeBookingMessage(result.booking, site.name));
+    });
+  }
+</script>

@@ -1,0 +1,35 @@
+---
+/** Mapa de Google que solo carga al tocarlo: la página no paga su peso si nadie lo usa. */
+import { Icon } from 'astro-icon/components';
+import { site } from '../../data/site';
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+const embedUrl = `https://www.google.com/maps?q=${site.geo.lat},${site.geo.lng}&z=17&output=embed`;
+---
+
+<div class={`cuadricula relative overflow-hidden ${className}`} data-mapa data-src={embedUrl}>
+  <span class="absolute top-0 left-0 z-10 h-[5px] w-[42%] bg-amarillo"></span>
+  <button type="button" class="absolute inset-0 flex flex-col items-center justify-center gap-4 text-apagado" data-mapa-boton>
+    <Icon name="ph:map-pin" class="size-14 text-amarillo" aria-hidden="true" />
+    <span class="font-mono text-[13px]">Mapa de Google, carga al tocar</span>
+  </button>
+</div>
+
+<script>
+  for (const mapa of document.querySelectorAll<HTMLElement>('[data-mapa]')) {
+    const boton = mapa.querySelector<HTMLButtonElement>('[data-mapa-boton]');
+    boton?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = mapa.dataset.src!;
+      iframe.title = 'Mapa con la ubicación del taller';
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      iframe.className = 'absolute inset-0 h-full w-full border-0';
+      mapa.appendChild(iframe);
+      boton.remove();
+      iframe.focus();
+    });
+  }
+</script>

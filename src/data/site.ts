@@ -18,20 +18,25 @@ export interface Service {
 }
 
 export interface ServiceGroup {
+  /** También es el ancla de su sección en /servicios */
   id: string;
+  num: string;
   title: string;
-  /** Icono Phosphor para astro-icon, p. ej. "ph:wrench" */
+  lead: string;
+  /** Icono Phosphor para astro-icon */
   icon: string;
+  /** Clave del registro de fotos (src/data/photos.ts) */
+  photo: string;
   services: Service[];
 }
 
-export interface Review {
-  quote: string;
-  author: string;
-  context: string;
+export interface VehicleClass {
+  name: string;
+  examples: string;
+  icon: string;
 }
 
-export interface GuideItem {
+export interface Principle {
   title: string;
   body: string;
 }
@@ -50,10 +55,14 @@ export interface SiteData {
   schedule: WeeklySchedule;
   yearsExperience: number;
   vehicleTypes: string[];
-  youtubeIds: string[];
+  vehicleClasses: VehicleClass[];
   serviceGroups: ServiceGroup[];
-  guide: GuideItem[];
-  reviews: Review[];
+  equipment: { name: string; icon: string }[];
+  principles: Principle[];
+  /** Párrafos de la historia. Lo que está entre corchetes lo tiene que completar el negocio. */
+  story: string[];
+  /** Pendiente de confirmar con el negocio; se muestra como marcador. */
+  parking: string | null;
 }
 
 export const site: SiteData = {
@@ -75,7 +84,7 @@ export const site: SiteData = {
     countryCode: 'EC',
   },
   geo: { lat: -2.113483, lng: -79.895025 },
-  // PENDIENTE DE CONFIRMAR: los dos sitios actuales publican horarios distintos.
+  // PENDIENTE DE CONFIRMAR: los dos sitios anteriores publicaban horarios distintos.
   schedule: {
     0: null,
     1: { open: '08:30', close: '18:00' },
@@ -87,32 +96,45 @@ export const site: SiteData = {
   },
   yearsExperience: 10,
   vehicleTypes: ['Livianos', 'Semipesados', 'Pesados'],
-  youtubeIds: ['t3sSL3RLqLA', 'nQSDrwFfDnI'],
+  vehicleClasses: [
+    { name: 'Livianos', examples: 'Autos y camionetas', icon: 'ph:car-profile' },
+    { name: 'Semipesados', examples: 'Furgonetas y camiones medianos', icon: 'ph:van' },
+    { name: 'Pesados', examples: 'Camiones grandes', icon: 'ph:truck' },
+  ],
   serviceGroups: [
     {
       id: 'mantenimiento',
+      num: '01',
       title: 'Mantenimiento',
+      lead: 'Para que el vehículo no llegue a la falla.',
       icon: 'ph:wrench',
+      photo: 'cambio-aceite',
       services: [
-        { id: 'mantenimiento-preventivo', name: 'Mantenimiento preventivo', summary: 'Revisiones periódicas para evitar fallas y alargar la vida útil del vehículo.' },
-        { id: 'cambio-de-aceite', name: 'Cambio de aceite', summary: 'Aceite a tiempo para que el motor no acumule residuos ni se desgaste.' },
-        { id: 'limpieza-de-inyectores', name: 'Limpieza de inyectores', summary: 'Quitamos carbón y depósitos para recuperar aceleración y bajar el consumo.' },
+        { id: 'mantenimiento-preventivo', name: 'Mantenimiento preventivo', summary: 'Revisiones periódicas según el kilometraje para evitar fallas y alargar la vida útil del vehículo.' },
+        { id: 'cambio-de-aceite', name: 'Cambio de aceite', summary: 'Aceite y filtro a tiempo, para que el motor no acumule residuos ni se desgaste.' },
+        { id: 'limpieza-de-inyectores', name: 'Limpieza de inyectores', summary: 'Quitamos carbón y depósitos para recuperar aceleración y bajar el consumo de combustible.' },
       ],
     },
     {
-      id: 'diagnostico-y-motor',
+      id: 'diagnostico',
+      num: '02',
       title: 'Diagnóstico y motor',
+      lead: 'Primero encontramos el origen, después reparamos.',
       icon: 'ph:engine',
+      photo: 'escaner',
       services: [
-        { id: 'diagnostico-computarizado', name: 'Diagnóstico computarizado', summary: 'Escaneamos el sistema electrónico y mecánico para encontrar el origen de la falla.' },
-        { id: 'motor', name: 'Motor', summary: 'Mantenimiento y reparación de motor para todo tipo de vehículo.' },
-        { id: 'transmision', name: 'Transmisión', summary: 'Revisión y reparación del eje de transmisión.' },
+        { id: 'diagnostico-computarizado', name: 'Diagnóstico computarizado', summary: 'Escaneamos el sistema electrónico y mecánico para encontrar el origen exacto de la falla.' },
+        { id: 'motor', name: 'Motor', summary: 'Mantenimiento y reparación de motor para livianos, semipesados y pesados.' },
+        { id: 'transmision', name: 'Transmisión', summary: 'Revisión y reparación del eje de transmisión y sus componentes.' },
       ],
     },
     {
-      id: 'frenos-suspension-direccion',
-      title: 'Frenos, suspensión y dirección',
+      id: 'frenos',
+      num: '03',
+      title: 'Frenos y tren delantero',
+      lead: 'Seguridad y estabilidad en la ciudad y en carretera.',
       icon: 'ph:steering-wheel',
+      photo: 'alineadora',
       services: [
         { id: 'frenos', name: 'Frenos', summary: 'Mantenimiento de frenos para manejar seguro en la ciudad y en carretera.' },
         { id: 'suspension', name: 'Suspensión', summary: 'Si el vehículo vibra, suena o pierde estabilidad, revisamos la suspensión.' },
@@ -121,14 +143,23 @@ export const site: SiteData = {
       ],
     },
   ],
-  guide: [
-    { title: 'Aceite de motor', body: 'Si no se cambia a tiempo, se acumulan residuos que desgastan las piezas del motor.' },
-    { title: 'Inyectores', body: 'Limpios, dosifican bien el combustible y evitan consumo excesivo u obstrucciones.' },
-    { title: 'Bujías', body: 'Las de cobre se cambian cada 20.000 km. Las de iridio, entre 80.000 y 100.000 km.' },
-    { title: 'Cuerpo de aceleración', body: 'Limpiarlo quita hollín y carbón, ahorra combustible y evita reparaciones costosas.' },
+  equipment: [
+    { name: 'Escáner de diagnóstico', icon: 'ph:scan' },
+    { name: 'Alineadora computarizada', icon: 'ph:steering-wheel' },
+    { name: 'Bahías para livianos a pesados', icon: 'ph:wrench' },
   ],
-  // Vacío hasta tener reseñas reales con permiso del cliente. La sección no se renderiza si está vacío.
-  reviews: [],
+  principles: [
+    { title: 'Primero el diagnóstico', body: 'Escaneamos el vehículo para encontrar el origen de la falla antes de cambiar piezas.' },
+    { title: 'Todas las marcas', body: 'Trabajamos con cualquier marca de auto, camioneta o camión.' },
+    { title: 'De livianos a pesados', body: 'Bahías y equipos para vehículos livianos, semipesados y pesados.' },
+  ],
+  story: [
+    'Empezamos en [AÑO] como Tecnicentro 80, en la esquina de Av. del Maestro y Miguel Riofrío. [COMPLETAR: cómo empezó el taller y quién lo fundó.]',
+    'Hoy seguimos en el mismo lugar con otro nombre, Rod Motors, y con diagnóstico y alineación computarizada para livianos, semipesados y pesados.',
+  ],
+  parking: null,
 };
 
 export const serviceNames: string[] = site.serviceGroups.flatMap((group) => group.services.map((s) => s.name));
+
+export const WHATSAPP_GREETING = 'Hola Rod Motors, quiero agendar una cita.';

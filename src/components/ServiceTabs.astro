@@ -1,0 +1,121 @@
+---
+/** Inicio: en escritorio, pestañas con la tarjeta apilada; en celular, las tres tarjetas una bajo otra. */
+import { Icon } from 'astro-icon/components';
+import { site } from '../data/site';
+import TextLink from './ui/TextLink.astro';
+const groups = site.serviceGroups;
+const cardBg = ['bg-marca', 'bg-elevada', 'bg-superficie'];
+---
+
+<!-- Celular -->
+<div class="flex flex-col gap-3.5 lg:hidden">
+  {
+    groups.map((g, i) => (
+      <div class={`${cardBg[i]} flex flex-col gap-4 p-6`}>
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <p class="mb-1.5 font-mono text-[13px] text-amarillo">{g.num}</p>
+            <h3 class="text-2xl leading-tight font-extrabold">{g.title}</h3>
+          </div>
+          <Icon name={g.icon} class="size-[34px] shrink-0 text-amarillo" aria-hidden="true" />
+        </div>
+        {g.services.map((s) => (
+          <div class="border-t border-claro/20 pt-3.5">
+            <p class="mb-1 text-[17px] font-bold">{s.name}</p>
+            <p class="text-sm leading-normal text-apagado">{s.summary}</p>
+          </div>
+        ))}
+      </div>
+    ))
+  }
+  <div class="pt-2"><TextLink href="/servicios">Ver todos los servicios</TextLink></div>
+</div>
+
+<!-- Escritorio -->
+<div class="hidden grid-cols-12 items-start gap-6 lg:grid" data-tabs>
+  <div class="col-span-4 flex flex-col gap-3">
+    <div role="tablist" aria-label="Frentes de servicio" aria-orientation="vertical" class="flex flex-col gap-3">
+      {
+        groups.map((g, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${g.id}`}
+            aria-controls={`panel-${g.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+            class="group flex min-h-[88px] w-full items-center gap-5 border border-claro/14 px-7 text-left text-apagado hover:border-claro/40 aria-selected:border-marca aria-selected:bg-marca aria-selected:text-claro"
+          >
+            <span class="font-mono text-[15px] text-etiqueta group-aria-selected:text-amarillo">{g.num}</span>
+            <span class="text-[22px] font-semibold group-aria-selected:font-bold">{g.title}</span>
+          </button>
+        ))
+      }
+    </div>
+    <div class="pt-4"><TextLink href="/servicios">Ver todos los servicios</TextLink></div>
+  </div>
+
+  <div class="relative col-span-8 pt-8">
+    <div class="absolute top-0 right-16 left-16 h-10 bg-superficie" aria-hidden="true"></div>
+    <div class="absolute top-4 right-8 left-8 h-10 bg-elevada" aria-hidden="true"></div>
+    {
+      groups.map((g, i) => (
+        <div
+          role="tabpanel"
+          id={`panel-${g.id}`}
+          aria-labelledby={`tab-${g.id}`}
+          tabindex="0"
+          class:list={['relative flex-col gap-9 bg-marca p-12 shadow-[0_-18px_50px_rgb(0_0_0/0.35)]', i === 0 ? 'flex' : 'hidden']}
+          data-panel
+        >
+          <div class="flex items-start justify-between gap-8">
+            <div>
+              <p class="mb-3 font-mono text-[15px] text-amarillo">{g.num}</p>
+              <h3 class="mb-3 text-[38px] leading-tight font-extrabold tracking-[-0.02em]">{g.title}</h3>
+              <p class="text-[17px] text-apagado">{g.lead}</p>
+            </div>
+            <Icon name={g.icon} class="size-11 shrink-0 text-amarillo" aria-hidden="true" />
+          </div>
+          <div class="grid grid-cols-2 gap-x-10 gap-y-7">
+            {g.services.map((s) => (
+              <div class="border-t border-claro/22 pt-[18px]">
+                <p class="mb-1.5 text-[19px] font-bold">{s.name}</p>
+                <p class="text-[15px] leading-relaxed text-apagado">{s.summary}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-tabs]')) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-panel]')];
+    const select = (index: number, focus = false) => {
+      tabs.forEach((tab, i) => {
+        const on = i === index;
+        tab.setAttribute('aria-selected', String(on));
+        tab.tabIndex = on ? 0 : -1;
+        panels[i].classList.toggle('hidden', !on);
+        panels[i].classList.toggle('flex', on);
+      });
+      if (focus) tabs[index].focus();
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(i));
+      tab.addEventListener('keydown', (event) => {
+        const keys: Record<string, number> = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+        if (event.key in keys) {
+          event.preventDefault();
+          select((i + keys[event.key] + tabs.length) % tabs.length, true);
+        } else if (event.key === 'Home' || event.key === 'End') {
+          event.preventDefault();
+          select(event.key === 'Home' ? 0 : tabs.length - 1, true);
+        }
+      });
+    });
+  }
+</script>

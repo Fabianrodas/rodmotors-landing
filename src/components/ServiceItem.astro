@@ -1,0 +1,13 @@
+---
+interface Props {
+  name: string;
+  summary: string;
+  size?: 'm' | 'l';
+}
+const { name, summary, size = 'l' } = Astro.props;
+---
+
+<div class="border-t border-claro/18 pt-[18px]">
+  <p class={`mb-1.5 font-bold ${size === 'l' ? 'text-lg lg:text-xl' : 'text-lg'}`}>{name}</p>
+  <p class="text-[15px] leading-relaxed text-apagado lg:text-base">{summary}</p>
+</div>

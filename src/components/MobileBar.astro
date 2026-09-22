@@ -1,22 +1,16 @@
 ---
+/** Barra fija del celular: llamar o agendar sin tener que volver arriba. */
 import { Icon } from 'astro-icon/components';
-import { site } from '../data/site';
-
-interface Props {
-  /** Igual que en Header: "/" donde la sección #agendar no existe. */
-  anchorBase?: string;
-}
-
-const { anchorBase = '' } = Astro.props;
+import { site, WHATSAPP_GREETING } from '../data/site';
+import { buildWhatsAppUrl } from '../lib/whatsapp';
+const wa = buildWhatsAppUrl(site.whatsappNumber, WHATSAPP_GREETING);
 ---
 
-<div class="fixed inset-x-0 bottom-0 z-20 grid grid-cols-[auto_1fr] border-t border-line bg-canvas md:hidden">
-  <a class="flex items-center justify-center gap-2 px-6 py-4 font-semibold" href={`tel:${site.phoneE164}`}>
-    <Icon name="ph:phone" class="size-5" aria-hidden="true" />
-    Llamar
+<div class="fixed inset-x-0 bottom-0 z-40 grid h-[72px] grid-cols-[1fr_2fr] shadow-[0_-10px_30px_rgb(0_0_0/0.35)] lg:hidden">
+  <a href={`tel:${site.phoneE164}`} class="flex items-center justify-center gap-2 border-t border-claro/14 bg-fondo text-[15px] font-bold text-claro">
+    <Icon name="ph:phone" class="size-[18px] text-amarillo" aria-hidden="true" />Llamar
   </a>
-  <a class="flex items-center justify-center gap-2 bg-accent px-4 py-4 font-semibold whitespace-nowrap text-on-accent" href={`${anchorBase}#agendar`}>
-    <Icon name="ph:whatsapp-logo" class="size-5" aria-hidden="true" />
-    Agendar por WhatsApp
+  <a href={wa} class="flex items-center justify-center gap-2 bg-amarillo text-[15px] font-extrabold text-tinta">
+    <Icon name="ph:whatsapp-logo" class="size-[18px]" aria-hidden="true" />Agendar por WhatsApp
   </a>
 </div>

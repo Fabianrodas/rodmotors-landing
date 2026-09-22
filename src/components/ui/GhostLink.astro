@@ -1,0 +1,14 @@
+---
+import { Icon } from 'astro-icon/components';
+interface Props {
+  href: string;
+  icon: string;
+  full?: boolean;
+}
+const { href, icon, full = false } = Astro.props;
+---
+
+<a href={href} class={`${full ? 'flex' : 'inline-flex'} min-h-[52px] items-center justify-center gap-2.5 border border-borde px-[22px] text-base font-semibold text-claro hover:border-amarillo`}>
+  <Icon name={icon} class="size-5 text-amarillo" aria-hidden="true" />
+  <slot />
+</a>

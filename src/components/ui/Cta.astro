@@ -1,0 +1,27 @@
+---
+/** La única acción de conversión del sitio. Misma etiqueta en todas partes: abre WhatsApp. */
+import { Icon } from 'astro-icon/components';
+import { site, WHATSAPP_GREETING } from '../../data/site';
+import { buildWhatsAppUrl } from '../../lib/whatsapp';
+
+interface Props {
+  size?: 's' | 'm' | 'l';
+  full?: boolean;
+  class?: string;
+}
+const { size = 'l', full = false, class: className = '' } = Astro.props;
+const href = buildWhatsAppUrl(site.whatsappNumber, WHATSAPP_GREETING);
+const sizes = {
+  s: 'min-h-12 px-[22px] text-[15px]',
+  m: 'min-h-14 px-6 text-base',
+  l: 'min-h-[62px] px-[34px] text-[17px]',
+};
+---
+
+<a
+  href={href}
+  class={`${full ? 'flex' : 'inline-flex'} items-center justify-center gap-2.5 bg-amarillo font-extrabold whitespace-nowrap text-tinta transition-transform duration-200 hover:-translate-y-px active:translate-y-px ${sizes[size]} ${className}`}
+>
+  <Icon name="ph:whatsapp-logo" class={size === 's' ? 'size-[18px]' : 'size-5'} aria-hidden="true" />
+  Agendar por WhatsApp
+</a>

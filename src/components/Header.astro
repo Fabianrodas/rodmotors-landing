@@ -1,47 +1,89 @@
 ---
+import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import { site } from '../data/site';
+import logo from '../assets/brand/logo.png';
+import Cta from './ui/Cta.astro';
+import { NAV, type PageKey } from '../data/nav';
 
 interface Props {
-  /** Prefijo de las anclas: vacío en la portada, "/" en páginas donde las secciones no existen (404). */
-  anchorBase?: string;
+  active?: PageKey;
 }
-
-const { anchorBase = '' } = Astro.props;
-const links = [
-  { href: `${anchorBase}#servicios`, label: 'Servicios' },
-  { href: `${anchorBase}#taller`, label: 'El taller' },
-  { href: `${anchorBase}#ubicacion`, label: 'Ubicación' },
-];
+const { active } = Astro.props;
 ---
 
-<header class="sticky top-0 z-10 bg-brand text-on-brand">
-  <div class="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-4">
-    <a class="display inline-flex min-h-11 items-center text-xl" href="/">{site.name}</a>
+<header class="sticky top-0 z-40 border-b border-claro/8 bg-fondo">
+  <div class="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-8 px-5 lg:h-20 lg:px-20">
+    <a href="/" class="block shrink-0">
+      <Image src={logo} alt="Rod Motors, taller automotriz, inicio" height={108} class="h-11 w-auto lg:h-[54px]" loading="eager" />
+    </a>
 
-    <nav class="hidden items-center gap-6 md:flex" aria-label="Secciones">
-      {links.map((link) => <a class="inline-flex min-h-11 items-center text-on-brand/80 hover:text-on-brand" href={link.href}>{link.label}</a>)}
-      <a class="inline-flex min-h-11 items-center gap-2 bg-accent px-4 py-2 font-semibold text-on-accent transition-transform duration-200 hover:-translate-y-px active:translate-y-px" href={`${anchorBase}#agendar`}>
-        <Icon name="ph:whatsapp-logo" class="size-5" aria-hidden="true" />
-        Agendar por WhatsApp
-      </a>
+    <nav aria-label="Principal" class="hidden items-center gap-1.5 lg:flex">
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            aria-current={item.key === active ? 'page' : undefined}
+            class="inline-flex min-h-11 items-center px-3.5 text-[15px] font-medium text-apagado hover:text-claro aria-[current=page]:font-bold aria-[current=page]:text-claro aria-[current=page]:shadow-[inset_0_-3px_0_var(--amarillo)]"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <span class="w-5" aria-hidden="true"></span>
+      <Cta size="s" />
     </nav>
 
-    <details class="relative md:hidden" data-menu>
-      <summary class="flex size-11 cursor-pointer items-center justify-center border border-on-brand/30" aria-label="Abrir menú">
-        <Icon name="ph:list" class="size-5" aria-hidden="true" />
-      </summary>
-      <nav class="absolute right-0 mt-2 grid w-56 gap-1 border border-line bg-surface p-3 text-ink" aria-label="Secciones">
-        {links.map((link) => <a class="flex min-h-11 items-center px-2" href={link.href}>{link.label}</a>)}
-      </nav>
-    </details>
+    <button
+      type="button"
+      class="flex size-12 items-center justify-center border border-claro/22 lg:hidden"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      aria-controls="menu-movil"
+      data-menu-boton
+    >
+      <Icon name="ph:list" class="size-6" aria-hidden="true" data-menu-icono-abrir />
+      <Icon name="ph:x" class="hidden size-6" aria-hidden="true" data-menu-icono-cerrar />
+    </button>
+  </div>
+
+  <div id="menu-movil" class="absolute inset-x-0 top-16 hidden border-b border-claro/12 bg-profundo shadow-[0_24px_50px_rgb(0_0_0/0.5)] lg:hidden" data-menu>
+    <nav aria-label="Principal, celular">
+      {
+        NAV.map((item) => (
+          <a
+            href={item.href}
+            aria-current={item.key === active ? 'page' : undefined}
+            class="flex min-h-[60px] items-center justify-between border-b border-claro/10 px-5 text-xl font-semibold text-claro aria-[current=page]:font-extrabold aria-[current=page]:text-amarillo"
+          >
+            {item.label}
+            <Icon name="ph:navigation-arrow" class="size-[18px] text-etiqueta" aria-hidden="true" />
+          </a>
+        ))
+      }
+    </nav>
+    <div class="p-5"><Cta size="m" full /></div>
   </div>
 </header>
 
 <script>
-  // Cierra el menú de celular al elegir una sección, para que no tape el destino.
-  const menu = document.querySelector<HTMLDetailsElement>('[data-menu]');
+  const boton = document.querySelector<HTMLButtonElement>('[data-menu-boton]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+  const setOpen = (open: boolean) => {
+    if (!boton || !menu) return;
+    menu.classList.toggle('hidden', !open);
+    boton.setAttribute('aria-expanded', String(open));
+    boton.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    boton.querySelector('[data-menu-icono-abrir]')?.classList.toggle('hidden', open);
+    boton.querySelector('[data-menu-icono-cerrar]')?.classList.toggle('hidden', !open);
+  };
+  boton?.addEventListener('click', () => setOpen(boton.getAttribute('aria-expanded') !== 'true'));
   menu?.addEventListener('click', (event) => {
-    if (event.target instanceof Element && event.target.closest('a')) menu.open = false;
+    if (event.target instanceof Element && event.target.closest('a')) setOpen(false);
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && boton?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      boton.focus();
+    }
   });
 </script>

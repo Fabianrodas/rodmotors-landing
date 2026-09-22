@@ -1,0 +1,45 @@
+---
+/**
+ * Foto del taller. Si existe src/assets/photos/<name>.(jpg|png|webp) se muestra optimizada;
+ * si no, un espacio marcado con la toma que falta (nunca una foto de stock).
+ */
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import { photos, type PhotoKey } from '../../data/photos';
+
+interface Props {
+  name: PhotoKey;
+  class?: string;
+  sizes?: string;
+  eager?: boolean;
+}
+const { name, class: className = '', sizes = '(min-width: 1024px) 50vw, 100vw', eager = false } = Astro.props;
+const files = import.meta.glob<{ default: ImageMetadata }>('/src/assets/photos/*.{jpg,jpeg,png,webp,avif}', { eager: true });
+const match = Object.entries(files).find(([path]) => path.split('/').pop()!.replace(/\.[^.]+$/, '') === name);
+const label = photos[name];
+---
+
+{
+  match ? (
+    <Image
+      src={match[1].default}
+      alt={label}
+      widths={[480, 800, 1200, 1600]}
+      sizes={sizes}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : 'auto'}
+      class={`block h-full w-full object-cover ${className}`}
+    />
+  ) : (
+    <div
+      class={`foto-vacia relative flex flex-col items-center justify-center gap-3.5 overflow-hidden ${className}`}
+      role="img"
+      aria-label={`Espacio para foto: ${label}`}
+      data-placeholder={name}
+    >
+      <span class="absolute top-0 left-0 h-[5px] w-[42%] bg-amarillo" />
+      <Icon name="ph:camera" class="size-[34px] text-etiqueta" aria-hidden="true" />
+      <span class="max-w-[34ch] px-6 text-center font-mono text-[13px] leading-normal tracking-[0.04em] text-apagado">Foto: {label}</span>
+    </div>
+  )
+}

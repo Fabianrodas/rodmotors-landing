@@ -1,0 +1,31 @@
+---
+/**
+ * Estado abierto/cerrado. El HTML trae un texto que siempre es cierto; el script lo cambia
+ * por el estado real con la hora de quien visita (la página es estática y se cachea).
+ */
+interface Props {
+  size?: 'd' | 'm';
+}
+const { size = 'd' } = Astro.props;
+---
+
+<p
+  class={`inline-flex items-center gap-3 border border-claro/20 bg-profundo/60 font-semibold numeric ${size === 'd' ? 'px-[18px] py-3 text-[15px]' : 'px-3.5 py-2.5 text-sm'}`}
+  data-estado
+>
+  <span class="size-2.5 shrink-0 rounded-full bg-etiqueta" data-estado-punto aria-hidden="true"></span>
+  <span data-estado-texto>Lunes a sábado desde las 08:30</span>
+</p>
+
+<script>
+  import { formatOpenStatus, getOpenStatus } from '../../lib/hours';
+  import { site } from '../../data/site';
+
+  const status = getOpenStatus(new Date(), site.schedule);
+  for (const chip of document.querySelectorAll<HTMLElement>('[data-estado]')) {
+    const text = chip.querySelector<HTMLElement>('[data-estado-texto]');
+    const dot = chip.querySelector<HTMLElement>('[data-estado-punto]');
+    if (text) text.textContent = formatOpenStatus(status);
+    if (dot && status.kind === 'open') dot.classList.replace('bg-etiqueta', 'bg-abierto'), dot.classList.add('rm-pulse');
+  }
+</script>

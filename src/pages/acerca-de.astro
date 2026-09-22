@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Diagonal from '../components/ui/Diagonal.astro';
+import TextLink from '../components/ui/TextLink.astro';
+import Photo from '../components/ui/Photo.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  title="Acerca de, Rod Motors"
+  description={`Rod Motors, antes ${site.legacyName}, más de ${site.yearsExperience} años como taller automotriz en Samanes 5, Guayaquil.`}
+>
+  <Header active="acerca" />
+  <main id="contenido">
+    <section class="relative overflow-hidden bg-fondo">
+      <div class="relative flex flex-col gap-[18px] px-5 pt-10 lg:w-[52%] lg:gap-7 lg:pt-24 lg:pl-20">
+        <p class="rm-r1 font-mono text-[13px] tracking-[0.06em] text-amarillo lg:text-sm">Acerca de</p>
+        <h1 class="rm-r2 display text-[clamp(2.625rem,5.6vw,5.25rem)]">Más de {site.yearsExperience} años<br />en Samanes 5</h1>
+        <p class="rm-r3 max-w-[36ch] text-base leading-relaxed text-apagado lg:text-xl">
+          Antes nos conocías como {site.legacyName}. Hoy somos {site.name}, en la misma esquina de siempre.
+        </p>
+        <div class="rm-r3"><TextLink href="/servicios">Ver servicios</TextLink></div>
+      </div>
+      <Diagonal class="-mx-5 mt-3 h-[300px] lg:absolute! lg:inset-y-0 lg:right-0 lg:mx-0 lg:mt-0 lg:h-auto lg:w-[48%]">
+        <Photo name="equipo" class="h-full w-full lg:pl-[18%]" sizes="(min-width: 1024px) 48vw, 100vw" />
+      </Diagonal>
+    </section>
+
+    <section class="bg-profundo px-5 py-14 lg:px-20 lg:py-32">
+      <div class="mx-auto flex max-w-[1280px] flex-col gap-6 lg:grid lg:grid-cols-12 lg:items-start lg:gap-6">
+        <div class="lg:col-span-4">
+          <p class="text-[110px] leading-[0.82] font-black tracking-[-0.05em] text-amarillo numeric lg:text-[176px]">{site.yearsExperience}+</p>
+          <p class="mt-2 text-xl font-bold lg:mt-4.5 lg:text-[22px]">años de oficio</p>
+        </div>
+        <div class="flex flex-col gap-5 lg:col-span-7 lg:col-start-6 lg:gap-6">
+          <h2 class="titulo text-[32px] lg:text-[56px]">De {site.legacyName} a {site.name}</h2>
+          {
+            site.story.map((paragraph) => (
+              <p class="text-[17px] leading-relaxed text-apagado lg:text-xl">
+                {paragraph.split(/(\[[^\]]+\])/g).map((part) => (part.startsWith('[') ? <span class="font-mono text-[0.85em] text-amarillo">{part}</span> : part))}
+              </p>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-fondo px-5 py-14 lg:px-20 lg:py-28">
+      <div class="mx-auto flex max-w-[1280px] flex-col gap-6 lg:grid lg:grid-cols-12 lg:items-stretch lg:gap-6">
+        <Photo name="tecnico-cliente" class="h-[240px] lg:col-span-5 lg:h-auto lg:min-h-[560px]" sizes="(min-width: 1024px) 40vw, 100vw" />
+        <div class="flex flex-col gap-6 lg:col-span-6 lg:col-start-7 lg:justify-center lg:gap-7">
+          <h2 class="titulo text-[32px] lg:text-[64px]">Cómo trabajamos</h2>
+          <ol>
+            {
+              site.principles.map((p, i) => (
+                <li class="flex gap-5 border-t border-claro/14 py-5 lg:gap-7 lg:py-[26px]">
+                  <span class="pt-0.5 font-mono text-[28px] leading-none font-semibold text-amarillo lg:text-[40px]">{String(i + 1).padStart(2, '0')}</span>
+                  <div>
+                    <p class="mb-1.5 text-lg font-extrabold lg:mb-2 lg:text-2xl">{p.title}</p>
+                    <p class="text-[15px] leading-relaxed text-apagado lg:text-base">{p.body}</p>
+                  </div>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-profundo px-5 py-14 lg:px-20 lg:py-28">
+      <div class="mx-auto flex max-w-[1280px] flex-col gap-3.5 lg:gap-12">
+        <h2 class="titulo text-[32px] lg:text-[64px]">El taller por dentro</h2>
+        <Photo name="galeria-bahias" class="h-[240px] lg:hidden" sizes="100vw" />
+        <div class="grid grid-cols-2 gap-3.5 lg:grid-cols-12 lg:gap-6">
+          <Photo name="galeria-bahias" class="hidden h-[380px] lg:col-span-5 lg:block" sizes="(min-width: 1024px) 40vw, 50vw" />
+          <Photo name="galeria-alineadora" class="h-[180px] lg:col-span-4 lg:h-[380px]" sizes="(min-width: 1024px) 33vw, 50vw" />
+          <Photo name="galeria-herramientas" class="h-[180px] lg:col-span-3 lg:h-[380px]" sizes="(min-width: 1024px) 25vw, 50vw" />
+        </div>
+      </div>
+    </section>
+
+    <CtaBand title="Trae tu vehículo" text="Escríbenos con el vehículo y el servicio, y te confirmamos el turno." />
+  </main>
+  <Footer />
+  <MobileBar />
+</Base>

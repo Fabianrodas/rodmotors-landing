@@ -1,0 +1,93 @@
+---
+import { Icon } from 'astro-icon/components';
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+import CtaBand from '../components/CtaBand.astro';
+import ServiceItem from '../components/ServiceItem.astro';
+import Diagonal from '../components/ui/Diagonal.astro';
+import Cta from '../components/ui/Cta.astro';
+import Photo from '../components/ui/Photo.astro';
+import { site } from '../data/site';
+const [g1, g2, g3] = site.serviceGroups;
+---
+
+<Base
+  title="Servicios, Rod Motors"
+  description="Mantenimiento, diagnóstico computarizado, frenos, suspensión y alineación para livianos, semipesados y pesados en Samanes 5, Guayaquil."
+>
+  <Header active="servicios" />
+  <main id="contenido">
+    <section class="relative overflow-hidden bg-fondo">
+      <Diagonal class="absolute! inset-y-0 right-0 hidden w-[620px] lg:block">
+        <ul class="flex flex-1 flex-col justify-center gap-[26px] pr-20 pl-[34%]">
+          {
+            site.vehicleClasses.map((v) => (
+              <li class="flex items-center gap-[18px]">
+                <Icon name={v.icon} class="size-9 shrink-0 text-amarillo" aria-hidden="true" />
+                <div>
+                  <p class="mb-1 text-[19px] font-extrabold">{v.name}</p>
+                  <p class="text-[15px] text-apagado">{v.examples}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </Diagonal>
+      <div class="relative flex flex-col gap-[18px] px-5 pt-10 pb-8 lg:gap-7 lg:px-20 lg:pt-24 lg:pb-[72px]">
+        <p class="rm-r1 font-mono text-[13px] tracking-[0.06em] text-amarillo lg:text-sm">Servicios</p>
+        <h1 class="rm-r2 display text-[clamp(2.75rem,5.8vw,5.25rem)]">Diez servicios,<br />un solo taller</h1>
+        <p class="rm-r3 max-w-[42ch] text-base leading-relaxed text-apagado lg:text-xl">Mantenimiento, diagnóstico y reparación para livianos, semipesados y pesados. Todas las marcas.</p>
+        <div class="rm-r3 mt-1.5 lg:mt-2"><Cta size="l" class="w-full lg:w-auto" /></div>
+      </div>
+    </section>
+
+    <nav aria-label="Frentes de servicio" class="flex flex-wrap gap-2 bg-profundo px-5 py-3.5 lg:flex-nowrap lg:gap-0 lg:border-y lg:border-claro/8 lg:py-0 lg:pl-[52px]">
+      {
+        site.serviceGroups.map((g) => (
+          <a href={`#${g.id}`} class="flex min-h-12 items-center gap-2 border border-claro/18 px-4 text-[15px] font-semibold text-claro hover:text-amarillo lg:min-h-16 lg:gap-3.5 lg:border-0 lg:border-l lg:border-claro/12 lg:px-7 lg:text-[17px]">
+            <span class="font-mono text-[13px] text-amarillo lg:text-sm">{g.num}</span>
+            {g.title}
+          </a>
+        ))
+      }
+    </nav>
+
+    {
+      [g1, g2].map((g, i) => (
+        <section id={g.id} class={`${i === 0 ? 'bg-fondo' : 'bg-profundo'} px-5 py-14 lg:px-20 lg:py-28`}>
+          <div class="mx-auto flex max-w-[1280px] flex-col gap-4 lg:grid lg:grid-cols-12 lg:items-stretch lg:gap-6">
+            <Photo name={g.photo as any} class={`h-[240px] lg:col-span-7 lg:h-auto lg:min-h-[600px] ${i === 1 ? 'lg:order-last' : ''}`} sizes="(min-width: 1024px) 58vw, 100vw" />
+            <div class={`flex flex-col gap-4 lg:col-span-5 lg:gap-[18px] ${i === 0 ? 'lg:pl-12' : 'lg:pr-12'}`}>
+              <p class="mt-2 font-mono text-[13px] text-amarillo lg:mt-0 lg:text-[15px]">{g.num}</p>
+              <h2 class="titulo text-[32px] lg:text-[56px]">{g.title}</h2>
+              <p class="text-base leading-relaxed text-apagado lg:text-[19px]">{g.lead}</p>
+              <div class="mt-1.5 flex flex-col gap-[18px] lg:mt-3 lg:gap-[22px]">
+                {g.services.map((s) => <ServiceItem name={s.name} summary={s.summary} />)}
+              </div>
+            </div>
+          </div>
+        </section>
+      ))
+    }
+
+    <section id={g3.id} class="bg-fondo px-5 py-14 lg:px-20 lg:py-28">
+      <div class="mx-auto flex max-w-[1280px] flex-col gap-4 lg:gap-12">
+        <div class="order-2 flex max-w-[760px] flex-col gap-4 lg:order-none lg:gap-[18px]">
+          <p class="mt-2 font-mono text-[13px] text-amarillo lg:mt-0 lg:text-[15px]">{g3.num}</p>
+          <h2 class="titulo text-[32px] lg:text-[56px]">{g3.title}</h2>
+          <p class="text-base leading-relaxed text-apagado lg:text-[19px]">{g3.lead}</p>
+        </div>
+        <Photo name={g3.photo as any} class="order-1 h-[240px] lg:order-none lg:h-[420px]" sizes="100vw" />
+        <div class="order-3 mt-1.5 grid gap-[18px] lg:order-none lg:mt-0 lg:grid-cols-4 lg:gap-8">
+          {g3.services.map((s) => <ServiceItem name={s.name} summary={s.summary} />)}
+        </div>
+      </div>
+    </section>
+
+    <CtaBand title="¿No sabes qué tiene tu vehículo?" text="Empezamos por el diagnóstico computarizado y te decimos qué hace falta antes de reparar." />
+  </main>
+  <Footer />
+  <MobileBar />
+</Base>

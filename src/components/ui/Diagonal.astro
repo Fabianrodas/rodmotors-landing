@@ -1,0 +1,17 @@
+---
+/** Firma visual del sitio: panel azul de marca con filo amarillo en diagonal. */
+interface Props {
+  class?: string;
+  /** Sin fondo azul: para enmarcar una foto con la misma diagonal. */
+  plain?: boolean;
+  decorative?: boolean;
+}
+const { class: className = '', plain = false, decorative = false } = Astro.props;
+---
+
+<div class={`relative ${className}`} aria-hidden={decorative ? 'true' : undefined}>
+  <div class="rm-wipe2 diag-cut diag-edge absolute inset-0 bg-amarillo" aria-hidden="true"></div>
+  <div class={`rm-wipe diag-cut absolute inset-0 flex ${plain ? '' : 'rayas bg-marca'}`}>
+    <slot />
+  </div>
+</div>

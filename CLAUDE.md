@@ -25,70 +25,75 @@ Consult these guides before working on related tasks:
 
 ## Qué es esto
 
-Landing única para Rod Motors, taller automotriz en Samanes 5, Guayaquil. Reemplaza dos sitios previos: un Google Sites en tecnicentro80.com y un WordPress.com en rodmotors.ec. Es una landing de una sola página, no una aplicación.
+Sitio de Rod Motors, taller automotriz en Samanes 5, Guayaquil. Reemplaza dos sitios previos: un Google Sites en tecnicentro80.com y un WordPress.com en rodmotors.ec. Es un sitio de **cuatro páginas** (Inicio, Servicios, Ubicación, Acerca de), no una landing de una sola página ni una aplicación.
 
-- Spec: `docs/superpowers/specs/2026-09-17-rodmotors-landing-design.md`
-- Plan: `docs/superpowers/plans/2026-09-17-rodmotors-landing.md`
+**El 2026-09-21 se rehizo el diseño de punta a punta**, con el logo real del cliente y una paleta nueva. Los documentos en `docs/superpowers/` (`specs/2026-09-17-rodmotors-landing-design.md` y `plans/2026-09-17-rodmotors-landing.md`) describen el diseño **anterior**, de una sola página con anclas: son historial, no la fuente de verdad actual. La fuente de verdad es el canvas de diseño donde se aprobó esta versión y este archivo.
 
 ## Stack
 
-Astro 7 estático, Tailwind v4 vía plugin de Vite, astro-icon con Phosphor, Archivo Variable por Fontsource, vitest, playwright. Node >= 22.12. **TypeScript queda en `^6`**: `@astrojs/check` todavía no soporta TypeScript 7.
+Astro 7 estático, Tailwind v4 vía plugin de Vite, astro-icon con Phosphor, Archivo Variable e IBM Plex Mono por Fontsource, vitest, playwright. Node >= 22.12. **TypeScript queda en `^6`**: `@astrojs/check` todavía no soporta TypeScript 7.
 
 ## Comandos
 
 ```bash
 npm run dev          # desarrollo
-npm run verify       # astro check + build + todos los tests de vitest (puerta de cada tarea)
+npm run verify       # astro check + build + todos los tests de vitest (puerta de cada cambio)
 npm run test         # solo unitarios
-npm run test:build   # build + tests sobre el HTML generado
+npm run test:build   # build + tests sobre el HTML generado, de las 5 páginas (4 + 404)
 npm run test:e2e     # playwright
-LAUNCH=1 npm run test:build   # además falla si quedan fotos provisionales
+LAUNCH=1 npm run test:build   # además falla si quedan espacios de foto sin llenar
 ```
+
+Playwright no descarga su propio Chromium en algunos entornos de desarrollo. Si `npx playwright test` no encuentra navegador, exporta `PLAYWRIGHT_CHROMIUM_PATH` con la ruta a un Chromium ya instalado (`playwright.config.ts` ya lo lee); en CI con salida a internet, `npx playwright install chromium` es lo normal y esa variable no hace falta.
 
 ## Skills, en este orden
 
-1. `superpowers:brainstorming` para cualquier cambio que no esté ya en el plan. Diseño aprobado antes de escribir código, siempre.
+1. `superpowers:brainstorming` para cualquier cambio de diseño que no esté ya aprobado en un canvas. Diseño aprobado antes de escribir código, siempre.
 2. `superpowers:writing-plans` si el cambio es grande, luego `subagent-driven-development` o `executing-plans`.
 3. `taste-skill:design-taste-frontend` y `example-skills:frontend-design` antes de tocar cualquier archivo de UI.
-4. `ui-ux-pro-max` para consultas puntuales de UX o accesibilidad, una query a la vez. Sus sugerencias de paleta y tipografía para "automotive" ya se evaluaron y se descartaron (ver spec, sección 7.1): no las reintroduzcas.
+4. `ui-ux-pro-max` para consultas puntuales de UX o accesibilidad, una query a la vez.
 
 ## Reglas que no se negocian
 
 **Copy**
-- Cero em dash (—) y en dash (–) en texto visible. Cero emojis. Hay tests que lo verifican.
+- Cero em dash (—) y en dash (–) en texto visible. Cero emojis. Hay tests que lo verifican en las 4 páginas.
 - Español de Ecuador, frases cortas, voz activa, mayúscula solo al inicio.
-- Una etiqueta por intención: agendar es siempre "Agendar por WhatsApp". Nunca "Escríbenos", "Contáctanos" ni "Solicita tu cita" como sinónimos.
+- Una etiqueta por intención: agendar es siempre "Agendar por WhatsApp", en cualquier página. Nunca "Escríbenos", "Contáctanos" ni "Solicita tu cita" como sinónimos.
 - Errores que dicen qué pasó y qué hacer. Sin "Ups" ni signos de admiración.
-- Nada inventado: ni reseñas, ni cifras, ni certificaciones, ni nombres de clientes.
+- Nada inventado: ni reseñas, ni cifras, ni certificaciones, ni nombres de clientes. Lo que falta (el año de fundación, si hay parqueo) queda como un marcador `[ASÍ]` en `src/data/site.ts`, nunca relleno inventado.
 
 **Diseño**
-- Solo los tokens de `src/styles/global.css`. La paleta por defecto de Tailwind está apagada con `--color-*: initial`, así que `bg-slate-800` o `text-white` no existen y no se vuelven a encender.
-- Azul oscuro (`brand`, `ink`) es el color principal y domina header, "El taller" y pie, no solo el hero; `brand-soft` es el único tono derivado, para los recuadros de foto y video dentro de una sección `brand`. El ámbar (`accent`) es el único acento y solo marca acciones: CTA, foco, errores. Dos excepciones, y solo esas dos, aprobadas en el spec y en el canvas de diseño: la celda "Atendemos todos los tamaños" en Servicios (`border-accent bg-accent/10`) y la pastilla de horario en Ubicación (`border-accent bg-accent/10 text-accent-strong`). Ninguna otra celda, tarjeta o pastilla nueva se tinta de ámbar sin pasar antes por el mismo proceso: spec, canvas, y anotarla aquí. Un solo sistema de esquinas (recto), un solo tema por página. Nada de negro ni blanco puros.
-- El hero es la **variante B**, aprobada en el canvas de diseño: foto a ancho completo con un panel `bg-brand` sólido (nunca semitransparente ni degradado) sobre la izquierda en escritorio; en celular el texto va apilado sobre fondo `brand` y la foto queda debajo.
-- Una sola familia tipográfica: Archivo Variable, self-hosted. Nunca `<link>` a Google Fonts.
+- Un solo tema, oscuro. No hay modo claro ni `prefers-color-scheme`: la paleta vive entera en `:root`, en `src/styles/global.css`. La paleta por defecto de Tailwind está apagada con `--color-*: initial`, así que `bg-slate-800` o `text-white` no existen y no se vuelven a encender.
+- Tokens: `fondo`, `superficie`, `elevada`, `marca`, `profundo` (fondos); `claro`, `apagado`, `etiqueta` (texto); `amarillo`, `tinta` (el único acento y su texto encima); `borde`; `abierto` (el punto de estado). El azul de marca (`marca`, `#244587`) es una versión atenuada del azul del logo (`#0036b3` al 100% de saturación): a saturación completa competía con el logo real en vez de hacerlo resaltar. No lo subas de saturación sin volver a medir contraste en `tests/unit/tokens.test.ts`.
+- El amarillo (`amarillo`) es el único acento: CTA, foco, la barra del punto de estado, la línea diagonal de marca. No es decorativo en ningún otro lado.
+- La firma visual del sitio es la diagonal de marca (componente `ui/Diagonal.astro`): un panel `bg-marca` con un filo `amarillo` cortado en diagonal (arriba en celular, a la izquierda en escritorio), tomada de la forma del escudo del logo. Se usa en el hero de Inicio, en la sección de tipos de vehículo de Servicios, en el hero de Acerca de y en la banda de cierre (`CtaBand`). No inventes una segunda geometría de marca.
+- Una sola familia tipográfica para texto corrido (Archivo Variable, self-hosted) y una mono (IBM Plex Mono) solo para etiquetas, números de folio y microcopy técnico (`font-mono`). Nunca `<link>` a Google Fonts.
 - Iconos solo de Phosphor (`ph:...`) vía astro-icon. Nunca dibujar paths de SVG a mano.
-- Sin etiquetas en mayúsculas encima de los títulos, sin indicadores de scroll, sin filas de tres tarjetas iguales, sin tarjetas con borde más sombra por defecto.
-- Dos momentos fuertes, no uno. El spec original fijaba uno solo (la orden de trabajo) y esa contención se leía como página muerta; el 2026-09-20 se admitió un segundo, que es la guía de mantenimiento (spec 7.6). Su escala tipográfica mayor (`h2` a `text-4xl md:text-5xl`, término a `text-2xl md:text-3xl`) es deliberada, no una inconsistencia: no la normalices al tamaño de las demás secciones. Sube de volumen solo con tipografía, nunca cambiando de fondo.
-- Movimiento: entrada del hero y respuesta táctil de botones. Nada de revelados por scroll sección por sección. Todo detrás de `prefers-reduced-motion`.
-- Modo claro y oscuro se revisan los dos antes de dar algo por terminado.
+- Sin etiquetas en mayúsculas encima de los títulos salvo el eyebrow de cada hero (uno por página). Sin indicadores de scroll. Sin filas de tres tarjetas iguales.
+- Movimiento: una entrada por página (el hero), la marquesina de tipos de vehículo, el pulso del punto de "abierto" y la palabra elástica de "DIAGNÓSTICO" en Inicio. Todo detrás de `prefers-reduced-motion`; los tests e2e de accesibilidad emulan `reducedMotion: 'reduce'` en vez de esperar a que animaciones infinitas terminen (nunca terminan, es a propósito).
+- Revisar siempre en celular y en escritorio: el breakpoint es `lg` (1024px), sin punto intermedio.
 
 **Datos**
 - Todo dato del negocio vive en `src/data/site.ts`. Nunca escribas un teléfono, un horario o una dirección directo en un componente.
 - El horario actual está pendiente de confirmación del negocio. Si cambia, se cambia ahí y ya.
-- `site.reviews` vacío significa que la sección no se muestra. No la rellenes para "que no se vea vacía".
+- `site.story` y `site.parking` pueden traer marcadores entre corchetes (`[AÑO]`, `[COMPLETAR: ...]`). Se renderizan en ámbar a propósito, para que se noten. No los completes por tu cuenta.
 
 **Fotos**
-- En `src/assets/photos/` quedan **solo dos** ilustraciones de marca provisionales (plano técnico de taller, azul y ámbar), generadas por `scripts/placeholder-photos.mjs`: `hero.jpg`, que es el fondo del hero, y `fachada.jpg`, que solo alimenta `public/og.jpg` y no se muestra en la página. Eran seis. El 2026-09-20 salieron cuatro: ocupaban cerca del 60% del alto y, siendo azul sobre azul, desaparecían en las secciones `brand` y se leían como huecos en las claras. Ese espacio pasó a tener contenido (spec 7.6). No las repongas para "llenar".
-- No se sustituyen por fotos de stock ni de otros talleres: para un negocio real con nombre y dirección propios, la foto de otro taller pasada como si fuera la suya es engañosa y un riesgo de derechos de autor, aunque sea "provisional". El reemplazo es directo: se sobrescribe el `.jpg` con el mismo nombre y ningún componente cambia.
-- `src/assets/video/` es **otra cosa y no es provisional**: son fotos reales del taller, cuadros de los videos del propio canal Rod Motors, con el nombre del archivo igual al id de YouTube. Sirven de póster de cada video. Las placas de los vehículos de clientes van difuminadas y así se quedan: son datos de terceros. No se vuelven a traer miniaturas de `i.ytimg.com`, que era una petición a un tercero en cada carga.
+- El registro de fotos que espera el sitio vive en `src/data/photos.ts` (13 claves). El componente `ui/Photo.astro` muestra la foto real si existe un archivo en `src/assets/photos/<clave>.(jpg|png|webp)`; si no, un espacio marcado con la descripción de esa toma, nunca una foto de stock ni una ilustración de relleno.
+- Poner una foto real es copiar el archivo con el nombre de la clave a `src/assets/photos/`. Ningún componente cambia.
+- `public/og.jpg` (la imagen al compartir el enlace) sale de `scripts/og-image.mjs`: usa `src/assets/photos/fachada.jpg` si ya existe, y si no arma una tarjeta de marca con el logo. Correr de nuevo el script cuando llegue esa foto.
+- `src/assets/brand/logo.png` es el logo real del cliente, ya sin el fondo blanco que traía el archivo original (se le quitó el fondo conservando los blancos internos del escudo). Es el único logo: no se regenera ni se reemplaza salvo que el cliente entregue un archivo nuevo. `scripts/favicon.mjs` lo usa para generar `public/favicon.png` y `public/apple-touch-icon.png`.
 - Toda imagen con contenido lleva `alt` descriptivo; las decorativas llevan `alt=""` y `aria-hidden="true"`.
 
+**Rutas**
+- Las cuatro páginas son rutas reales (`/`, `/servicios`, `/ubicacion`, `/acerca-de`), no anclas de una sola página. `public/_redirects` manda las rutas viejas del Google Sites a la página nueva más parecida. **Nunca agregues ahí una regla que apunte a una de estas cuatro rutas**: taparía la página real (ya pasó una vez con `/acerca-de`, se corrigió).
+- El menú (`src/data/nav.ts`) es la única lista de páginas: agregar o quitar una página empieza ahí.
+
 **No cambiar sin aprobación explícita del cliente**
-- Slugs y anclas (`#servicios`, `#taller`, `#guia`, `#agendar`, `#ubicacion`): las redirecciones de las URLs viejas apuntan ahí.
-- El contenido de `public/_redirects`.
 - El nombre del negocio, el logo y el número de WhatsApp.
-- La variante de hero (B) y qué secciones usan `bg-brand` (header, "El taller", pie): salieron de una revisión en el canvas de diseño, no de una preferencia de quien programa.
+- El contenido de `public/_redirects`.
+- La dirección de marca (diagonal + escudo del logo) y la paleta: salieron de una revisión de diez direcciones de diseño en el canvas, no de una preferencia de quien programa.
 
 ## Definición de terminado
 
-`npm run verify` en verde, e2e en verde, revisado en celular y escritorio, en modo claro y oscuro, y la lista de la tarea 16 del plan recorrida entera.
+`npm run verify` en verde, `npm run test:e2e` en verde, revisado en celular y escritorio en las 4 páginas.

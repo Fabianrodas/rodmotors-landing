@@ -1,6 +1,7 @@
+# Rutas del Google Sites viejo (tecnicentro80.com).
 /inicio / 301
-/nuestros-servicios/catalogo /#servicios 301
-/nuestros-servicios/cat%C3%A1logo /#servicios 301
-/nuestros-servicios/blog /#guia 301
-/acerca-de / 301
-/acerca-de/ / 301
+# El catálogo de servicios y el blog de mantenimiento no tienen una página exacta
+# equivalente en el sitio nuevo: /servicios es el destino más cercano en los dos casos.
+/nuestros-servicios/catalogo /servicios 301
+/nuestros-servicios/cat%C3%A1logo /servicios 301
+/nuestros-servicios/blog /servicios 301

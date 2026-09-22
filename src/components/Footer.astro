@@ -1,30 +1,39 @@
 ---
+import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
-import { site } from '../data/site';
-
+import logo from '../assets/brand/logo.png';
+import { site, WHATSAPP_GREETING } from '../data/site';
+import { NAV } from '../data/nav';
+import { buildWhatsAppUrl } from '../lib/whatsapp';
+const wa = buildWhatsAppUrl(site.whatsappNumber, WHATSAPP_GREETING);
 const year = new Date().getFullYear();
 ---
 
-<footer class="bg-brand py-10 pb-24 text-on-brand md:pb-10">
-  <div class="mx-auto grid max-w-[1400px] gap-6 px-4 md:grid-cols-3">
-    <div>
-      <p class="display text-xl">{site.name}</p>
-      <p class="text-on-brand/70">Antes {site.legacyName}</p>
+<footer class="border-t border-claro/8 bg-profundo px-5 pt-14 pb-28 lg:px-20 lg:pt-[72px] lg:pb-10">
+  <div class="mx-auto flex max-w-[1280px] flex-col gap-12">
+    <div class="flex flex-col gap-8 lg:grid lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:items-start lg:gap-10">
+      <div class="flex items-center gap-[18px]">
+        <Image src={logo} alt="Rod Motors" height={168} class="h-[72px] w-auto lg:h-[84px]" />
+        <p class="text-[15px] leading-normal text-apagado">{site.name},<br />antes {site.legacyName}</p>
+      </div>
+      <div class="flex flex-col">
+        <p class="mb-2.5 font-mono text-[13px] text-etiqueta">Páginas</p>
+        {NAV.map((item) => <a href={item.href} class="inline-flex min-h-11 items-center text-base text-claro hover:text-amarillo">{item.label}</a>)}
+      </div>
+      <div>
+        <p class="mb-2.5 font-mono text-[13px] text-etiqueta">Dirección</p>
+        <p class="text-base leading-relaxed">{site.address.street}<br />{site.address.city}, Ecuador</p>
+      </div>
+      <div class="flex flex-col">
+        <p class="mb-2.5 font-mono text-[13px] text-etiqueta">Contacto</p>
+        <a href={wa} class="inline-flex min-h-11 items-center gap-2.5 text-[17px] font-semibold text-amarillo numeric">
+          <Icon name="ph:whatsapp-logo" class="size-5" aria-hidden="true" />{site.phoneDisplay}
+        </a>
+        <a href={site.instagram.url} class="inline-flex min-h-11 items-center gap-2.5 text-[17px] font-semibold text-amarillo">
+          <Icon name="ph:instagram-logo" class="size-5" aria-hidden="true" />{site.instagram.handle}
+        </a>
+      </div>
     </div>
-    <div class="text-on-brand/80">
-      <p>{site.address.street}</p>
-      <p>{site.address.reference}, {site.address.city}</p>
-    </div>
-    <div class="grid gap-2">
-      <a class="numeric flex min-h-11 items-center gap-2 text-accent" href={`tel:${site.phoneE164}`}>
-        <Icon name="ph:phone" class="size-5" aria-hidden="true" />
-        {site.phoneDisplay}
-      </a>
-      <a class="flex min-h-11 items-center gap-2 text-accent" href={site.instagram.url}>
-        <Icon name="ph:instagram-logo" class="size-5" aria-hidden="true" />
-        {site.instagram.handle}
-      </a>
-    </div>
+    <p class="border-t border-claro/8 pt-6 text-sm text-etiqueta numeric">{year} {site.name}, Guayaquil</p>
   </div>
-  <p class="numeric mx-auto mt-8 max-w-[1400px] px-4 text-sm text-on-brand/60">{year} {site.name}, Guayaquil, Ecuador</p>
 </footer>

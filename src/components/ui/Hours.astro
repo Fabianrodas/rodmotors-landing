@@ -1,0 +1,20 @@
+---
+import { site } from '../../data/site';
+import { groupSchedule } from '../../lib/hours';
+interface Props {
+  size?: 'd' | 'm';
+}
+const { size = 'd' } = Astro.props;
+const rows = groupSchedule(site.schedule);
+---
+
+<dl class={size === 'd' ? 'text-[17px]' : 'text-base'}>
+  {
+    rows.map((row) => (
+      <div class="flex justify-between gap-6 border-t border-claro/12 py-3.5 numeric">
+        <dt class="text-apagado">{row.label}</dt>
+        <dd class={row.hours === 'Cerrado' ? 'text-etiqueta' : 'text-claro'}>{row.hours}</dd>
+      </div>
+    ))
+  }
+</dl>

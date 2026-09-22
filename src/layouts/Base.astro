@@ -34,11 +34,13 @@ const jsonLd = JSON.stringify(buildAutoRepairJsonLd(site, ogImage));
     {!noindex && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0a1633" />
     <script type="application/ld+json" is:inline set:html={jsonLd} />
   </head>
   <body>
-    <a href="#contenido" class="sr-only focus:not-sr-only focus:absolute focus:z-30 focus:m-3 focus:bg-surface focus:px-4 focus:py-2 focus:text-ink">
+    <a href="#contenido" class="sr-only focus:not-sr-only focus:absolute focus:z-30 focus:m-3 focus:bg-superficie focus:px-4 focus:py-2 focus:text-claro">
       Saltar al contenido
     </a>
     <slot />

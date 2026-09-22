@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileBar from '../components/MobileBar.astro';
+import CtaBand from '../components/CtaBand.astro';
+import GhostLink from '../components/ui/GhostLink.astro';
+import StatusChip from '../components/ui/StatusChip.astro';
+import Hours from '../components/ui/Hours.astro';
+import MapFacade from '../components/ui/MapFacade.astro';
+import Photo from '../components/ui/Photo.astro';
+import { site } from '../data/site';
+
+const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${site.geo.lat}%2C${site.geo.lng}`;
+const wazeUrl = `https://waze.com/ul?ll=${site.geo.lat}%2C${site.geo.lng}&navigate=yes`;
+const details: [string, string][] = [
+  ['Dirección', `${site.address.street}, ${site.address.city}`],
+  ['Referencia', site.address.reference],
+  ['WhatsApp y teléfono', site.phoneDisplay],
+  ['Estacionamiento', site.parking ?? '[PENDIENTE: confirmar si hay parqueo para clientes]'],
+];
+---
+
+<Base
+  title="Ubicación, Rod Motors"
+  description={`Rod Motors está en ${site.address.street}, ${site.address.reference}, ${site.address.city}. Horario y cómo llegar.`}
+>
+  <Header active="ubicacion" />
+  <main id="contenido">
+    <section class="bg-fondo px-5 pt-10 pb-8 lg:px-20 lg:pt-24 lg:pb-28">
+      <div class="mx-auto flex max-w-[1280px] flex-col gap-[22px] lg:grid lg:grid-cols-12 lg:items-stretch lg:gap-6">
+        <div class="flex flex-col gap-5 lg:col-span-6 lg:gap-7 lg:pr-10">
+          <p class="rm-r1 font-mono text-[13px] tracking-[0.06em] text-amarillo lg:text-sm">Ubicación</p>
+          <h1 class="rm-r2 display text-[clamp(2.75rem,5.5vw,5.25rem)]">Cómo llegar<br />al taller</h1>
+          <div class="rm-r3">
+            <p class="mb-1.5 text-lg font-semibold lg:text-xl">{site.address.street}</p>
+            <p class="text-[15px] text-apagado lg:text-lg">{site.address.reference}, {site.address.city}</p>
+          </div>
+          <MapFacade class="h-[280px] lg:hidden" />
+          <div class="rm-r3 flex flex-col gap-2.5 lg:flex-row lg:flex-wrap">
+            <GhostLink href={mapsUrl} icon="ph:map-pin" full>Abrir en Google Maps</GhostLink>
+            <GhostLink href={wazeUrl} icon="ph:navigation-arrow" full>Abrir en Waze</GhostLink>
+          </div>
+        </div>
+        <MapFacade class="hidden min-h-[540px] lg:col-span-6 lg:block" />
+      </div>
+    </section>
+
+    <section class="bg-profundo px-5 py-14 lg:px-20 lg:py-28">
+      <div class="mx-auto flex max-w-[1280px] flex-col gap-8 lg:gap-12">
+        <div class="flex max-w-[760px] flex-col gap-3.5 lg:gap-5">
+          <h2 class="titulo text-[34px] lg:text-[64px]">Así nos reconoces</h2>
+          <p class="text-base leading-relaxed text-apagado lg:text-[19px]">La fachada y la entrada de vehículos, para que ubiques el taller desde la calle.</p>
+        </div>
+        <div class="grid gap-3.5 lg:auto-rows-[300px] lg:grid-cols-12 lg:gap-6">
+          <Photo name="fachada" class="h-[260px] lg:col-span-7 lg:row-span-2 lg:h-auto" sizes="(min-width: 1024px) 58vw, 100vw" />
+          <Photo name="entrada" class="h-[220px] lg:col-span-5 lg:h-auto" sizes="(min-width: 1024px) 40vw, 100vw" />
+          <div class="flex flex-col gap-4 bg-superficie p-6 lg:col-span-5 lg:gap-0 lg:justify-between lg:p-9">
+            <div><StatusChip /></div>
+            <Hours />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-fondo px-5 py-14 lg:px-20 lg:py-28">
+      <div class="mx-auto flex max-w-[1280px] flex-col gap-8 lg:grid lg:grid-cols-12 lg:items-stretch lg:gap-6">
+        <div class="flex flex-col gap-6 lg:col-span-7 lg:gap-10 lg:pr-14">
+          <h2 class="titulo text-[34px] lg:text-[64px]">Antes de venir</h2>
+          <dl class="grid gap-[22px] lg:grid-cols-2 lg:gap-x-10 lg:gap-y-8">
+            {
+              details.map(([term, desc]) => (
+                <div class="border-t border-claro/18 pt-[18px]">
+                  <dt class="mb-1.5 font-mono text-[13px] text-etiqueta">{term}</dt>
+                  <dd class="text-[17px] leading-normal">
+                    {desc.startsWith('[') ? <span class="font-mono text-[0.9em] text-amarillo">{desc}</span> : desc}
+                  </dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+        <Photo name="esquina" class="h-[240px] lg:col-span-5 lg:h-auto lg:min-h-[440px]" sizes="(min-width: 1024px) 40vw, 100vw" />
+      </div>
+    </section>
+
+    <CtaBand title="¿Vienes hoy?" text="Escríbenos antes de salir y te confirmamos si hay turno." />
+  </main>
+  <Footer />
+  <MobileBar />
+</Base>
