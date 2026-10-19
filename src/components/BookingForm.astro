@@ -5,11 +5,6 @@ import { site } from '../data/site';
 import { VEHICLE_LABELS, VEHICLE_TYPES } from '../lib/whatsapp';
 
 const vehicleIcons = { liviano: 'ph:car-profile', semipesado: 'ph:van', pesado: 'ph:truck' } as const;
-const steps = [
-  ['01', 'Llenas la orden', 'Vehículo, servicio y el día que te conviene.'],
-  ['02', 'Se abre WhatsApp', 'Con el mensaje ya escrito, solo lo envías.'],
-  ['03', 'Te confirmamos', 'El turno te llega por el mismo chat.'],
-];
 const label = 'mb-2.5 block font-mono text-[13px] tracking-[0.04em] text-etiqueta';
 const field =
   'min-h-[52px] w-full border border-borde bg-fondo px-4 text-base text-claro placeholder:text-etiqueta aria-invalid:border-amarillo focus-visible:border-amarillo';
@@ -21,25 +16,27 @@ const error = 'mt-2.5 flex items-center gap-2 text-sm text-amarillo';
     <div class="flex flex-col gap-3.5 lg:col-span-5 lg:gap-5 lg:pr-12">
       <h2 class="titulo text-[38px] lg:text-[64px]">Agenda en un minuto</h2>
       <p class="mb-3 text-base leading-relaxed text-apagado lg:text-[19px]">Llenas la orden de trabajo y se abre WhatsApp con los datos listos.</p>
-      <ol>
-        {
-          steps.map(([n, t, d]) => (
-            <li class="flex gap-5 border-t border-claro/12 py-5">
-              <span class="pt-0.5 font-mono text-[15px] text-amarillo">{n}</span>
-              <div>
-                <p class="mb-1.5 text-[17px] font-bold lg:text-[19px]">{t}</p>
-                <p class="text-[15px] leading-normal text-apagado">{d}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
+      <ul class="flex flex-col">
+        <li class="flex items-start gap-4 border-t border-claro/12 py-5">
+          <Icon name="ph:chat-circle-text" class="mt-0.5 size-6 shrink-0 text-amarillo" aria-hidden="true" />
+          <div>
+            <p class="mb-1 text-[17px] font-bold lg:text-[19px]">Te respondemos por el mismo chat</p>
+            <p class="text-[15px] leading-normal text-apagado">En horario de atención, lunes a sábado desde las 08:30.</p>
+          </div>
+        </li>
+        <li class="flex items-start gap-4 border-t border-claro/12 py-5">
+          <Icon name="ph:phone" class="mt-0.5 size-6 shrink-0 text-amarillo" aria-hidden="true" />
+          <div>
+            <p class="mb-1 text-[17px] font-bold lg:text-[19px]">¿Prefieres llamar?</p>
+            <p class="text-[15px] leading-normal text-apagado"><a href={`tel:${site.phoneE164}`} class="font-semibold text-claro underline decoration-amarillo/60 underline-offset-4 numeric">{site.phoneDisplay}</a></p>
+          </div>
+        </li>
+      </ul>
     </div>
 
     <form class="border border-claro/8 bg-superficie lg:col-span-7" method="get" action={`https://wa.me/${site.whatsappNumber}`} data-orden novalidate>
-      <div class="flex items-center justify-between border-b border-claro/10 px-5 py-[22px] lg:px-9">
+      <div class="flex items-center border-b border-claro/10 px-5 py-[22px] lg:px-9">
         <p class="text-lg font-extrabold lg:text-xl">Orden de trabajo</p>
-        <p class="font-mono text-[13px] text-etiqueta">Folio automático</p>
       </div>
 
       <div class="flex flex-col gap-[22px] px-5 py-7 lg:gap-[26px] lg:px-9">

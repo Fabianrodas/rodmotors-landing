@@ -5,6 +5,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileBar from '../components/MobileBar.astro';
 import CtaBand from '../components/CtaBand.astro';
+import Faq from '../components/Faq.astro';
 import ServiceItem from '../components/ServiceItem.astro';
 import Diagonal from '../components/ui/Diagonal.astro';
 import Cta from '../components/ui/Cta.astro';
@@ -85,6 +86,8 @@ const [g1, g2, g3] = site.serviceGroups;
         </div>
       </div>
     </section>
+
+    <Faq />
 
     <CtaBand title="¿No sabes qué tiene tu vehículo?" text="Empezamos por el diagnóstico computarizado y te decimos qué hace falta antes de reparar." />
   </main>

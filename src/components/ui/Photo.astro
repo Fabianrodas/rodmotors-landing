@@ -2,6 +2,7 @@
 /**
  * Foto del taller. Si existe src/assets/photos/<name>.(jpg|png|webp) se muestra optimizada;
  * si no, un espacio marcado con la toma que falta (nunca una foto de stock).
+ * Con `caption`, la foto lleva una etiqueta abajo a la izquierda (p. ej. el equipo que se ve).
  */
 import { Image } from 'astro:assets';
 import { Icon } from 'astro-icon/components';
@@ -12,34 +13,34 @@ interface Props {
   class?: string;
   sizes?: string;
   eager?: boolean;
+  caption?: string;
 }
-const { name, class: className = '', sizes = '(min-width: 1024px) 50vw, 100vw', eager = false } = Astro.props;
+const { name, class: className = '', sizes = '(min-width: 1024px) 50vw, 100vw', eager = false, caption } = Astro.props;
 const files = import.meta.glob<{ default: ImageMetadata }>('/src/assets/photos/*.{jpg,jpeg,png,webp,avif}', { eager: true });
 const match = Object.entries(files).find(([path]) => path.split('/').pop()!.replace(/\.[^.]+$/, '') === name);
 const label = photos[name];
+const fill = caption ? 'absolute inset-0' : className;
 ---
 
-{
-  match ? (
-    <Image
-      src={match[1].default}
-      alt={label}
-      widths={[480, 800, 1200, 1600]}
-      sizes={sizes}
-      loading={eager ? 'eager' : 'lazy'}
-      fetchpriority={eager ? 'high' : 'auto'}
-      class={`block h-full w-full object-cover ${className}`}
-    />
-  ) : (
-    <div
-      class={`foto-vacia relative flex flex-col items-center justify-center gap-3.5 overflow-hidden ${className}`}
-      role="img"
-      aria-label={`Espacio para foto: ${label}`}
-      data-placeholder={name}
-    >
-      <span class="absolute top-0 left-0 h-[5px] w-[42%] bg-amarillo" />
-      <Icon name="ph:camera" class="size-[34px] text-etiqueta" aria-hidden="true" />
-      <span class="max-w-[34ch] px-6 text-center font-mono text-[13px] leading-normal tracking-[0.04em] text-apagado">Foto: {label}</span>
-    </div>
-  )
-}
+{caption ? (
+  <figure class={`relative overflow-hidden ${className}`}>
+    {match ? (
+      <Image src={match[1].default} alt={label} widths={[480, 800, 1200, 1600]} sizes={sizes} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} class={`block h-full w-full object-cover ${fill}`} />
+    ) : (
+      <div class={`foto-vacia flex flex-col items-center justify-center gap-3.5 overflow-hidden ${fill}`} role="img" aria-label={`Espacio para foto: ${label}`} data-placeholder={name}>
+        <span class="absolute top-0 left-0 h-[5px] w-[42%] bg-amarillo" />
+        <Icon name="ph:camera" class="size-[34px] text-etiqueta" aria-hidden="true" />
+        <span class="max-w-[34ch] px-6 text-center font-mono text-[13px] leading-normal tracking-[0.04em] text-apagado">Foto: {label}</span>
+      </div>
+    )}
+    <figcaption class="absolute bottom-0 left-0 bg-profundo/90 px-4 py-2.5 text-[15px] font-bold lg:px-5 lg:py-3 lg:text-base">{caption}</figcaption>
+  </figure>
+) : match ? (
+  <Image src={match[1].default} alt={label} widths={[480, 800, 1200, 1600]} sizes={sizes} loading={eager ? 'eager' : 'lazy'} fetchpriority={eager ? 'high' : 'auto'} class={`block h-full w-full object-cover ${className}`} />
+) : (
+  <div class={`foto-vacia relative flex flex-col items-center justify-center gap-3.5 overflow-hidden ${className}`} role="img" aria-label={`Espacio para foto: ${label}`} data-placeholder={name}>
+    <span class="absolute top-0 left-0 h-[5px] w-[42%] bg-amarillo" />
+    <Icon name="ph:camera" class="size-[34px] text-etiqueta" aria-hidden="true" />
+    <span class="max-w-[34ch] px-6 text-center font-mono text-[13px] leading-normal tracking-[0.04em] text-apagado">Foto: {label}</span>
+  </div>
+)}

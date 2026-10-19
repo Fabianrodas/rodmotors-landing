@@ -4,6 +4,7 @@
  * muestra un espacio marcado con esta descripción, en vez de una foto de stock.
  */
 export const photos = {
+  hero: 'Vehículo en la bahía principal, foto horizontal y luminosa',
   'bahia-elevador': 'Bahía de servicio con vehículo en el elevador',
   'camion-bahia': 'Camión en la bahía de trabajo pesado',
   'cambio-aceite': 'Cambio de aceite en la bahía',

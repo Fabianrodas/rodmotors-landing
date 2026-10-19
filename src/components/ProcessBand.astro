@@ -1,0 +1,31 @@
+---
+/** Banda de proceso: el diagnóstico en grande (el primer paso) y, debajo, lo que viene después. */
+import { Icon } from 'astro-icon/components';
+import { site } from '../data/site';
+const [first, ...rest] = site.process;
+---
+
+<section class="overflow-hidden bg-marca px-5 py-16 lg:px-20 lg:py-[104px]">
+  <div class="mx-auto flex max-w-[1280px] flex-col gap-6 lg:gap-9">
+    <h2 class="rm-kin text-[clamp(2.875rem,10vw,9.375rem)] leading-[0.85] font-black tracking-[-0.04em] whitespace-nowrap">
+      DIAGNÓSTICO<span class="sr-only">, y después {rest.map((s) => s.name.toLowerCase()).join(', ')}</span>
+    </h2>
+    <div class="rm-draw h-[3px] bg-amarillo" aria-hidden="true"></div>
+    <div class="flex flex-col gap-10 lg:grid lg:grid-cols-12 lg:gap-6">
+      <div class="flex items-start gap-5 lg:col-span-5">
+        <Icon name="ph:scan" class="hidden size-10 shrink-0 text-amarillo lg:block" aria-hidden="true" />
+        <p class="text-[17px] leading-relaxed text-claro lg:text-[21px]">{first.body} Primero eso, antes de tocar una pieza.</p>
+      </div>
+      <ol class="flex flex-col lg:col-span-6 lg:col-start-7">
+        {
+          rest.map((step) => (
+            <li class="flex items-baseline gap-5 border-t border-claro/20 py-4 lg:gap-8">
+              <p class="w-[124px] shrink-0 text-lg font-extrabold lg:w-[150px] lg:text-xl">{step.name}</p>
+              <p class="text-base leading-relaxed text-claro/85 lg:text-[17px]">{step.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>

@@ -84,7 +84,7 @@ describe('reglas anti plantilla (taste-skill)', () => {
   it.each(docs)('$path: no usa guiones largos ni cortos, ni emojis, en el texto visible', ({ doc }) => {
     const text = doc.querySelector('body')?.structuredText ?? '';
     expect(text).not.toMatch(/[—–]/);
-    expect(text).not.toMatch(/\p{Extended_Pictographic}/u);
+    expect(text.replace(/[©®]/g, "")).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 
   it.each(docs)('$path: una sola etiqueta para la acción de agendar', ({ doc }) => {

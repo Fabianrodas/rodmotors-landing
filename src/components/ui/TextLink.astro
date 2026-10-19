@@ -3,11 +3,13 @@ import { Icon } from 'astro-icon/components';
 interface Props {
   href: string;
   class?: string;
+  /** Flecha normal; ph:navigation-arrow solo para enlaces de "cómo llegar". */
+  icon?: string;
 }
-const { href, class: className = '' } = Astro.props;
+const { href, class: className = '', icon = 'ph:arrow-right' } = Astro.props;
 ---
 
 <a href={href} class={`inline-flex min-h-12 items-center gap-2.5 border-b border-amarillo/60 text-base font-semibold text-claro hover:border-amarillo ${className}`}>
-  <Icon name="ph:navigation-arrow" class="size-4 text-amarillo" aria-hidden="true" />
+  <Icon name={icon} class="size-4 text-amarillo" aria-hidden="true" />
   <slot />
 </a>

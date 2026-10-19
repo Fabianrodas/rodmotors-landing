@@ -1,0 +1,41 @@
+---
+/** Reseñas de Google. Sin reseñas reales cargadas, muestra los espacios marcados (el test LAUNCH los bloquea). */
+import { Icon } from 'astro-icon/components';
+import { site } from '../data/site';
+const placeholders = [0, 1, 2].map(() => ({ text: '[RESEÑA REAL DE GOOGLE, CON PERMISO]', author: '[NOMBRE]', vehicle: '[VEHÍCULO Y SERVICIO]' }));
+const items = site.reviews.length ? site.reviews : placeholders;
+const rating = site.googleRating;
+---
+
+<section class="bg-fondo px-5 py-[72px] lg:px-20 lg:py-28">
+  <div class="mx-auto flex max-w-[1280px] flex-col gap-8 lg:gap-14">
+    <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+      <h2 class="titulo text-[38px] lg:text-[64px]">Lo que dicen<br class="hidden lg:block" /> en Google</h2>
+      <div class="flex items-center gap-5">
+        <p class="text-[64px] leading-none font-black tracking-[-0.04em] numeric lg:text-[88px]">
+          {rating ? rating.score : <span class="font-mono text-[28px] text-amarillo lg:text-[32px]">[4,X]</span>}
+        </p>
+        <div>
+          <p class="mb-1.5 flex gap-1 text-amarillo" aria-hidden="true">
+            {[0, 1, 2, 3, 4].map(() => <Icon name="ph:star-fill" class="size-5" />)}
+          </p>
+          <p class="text-[15px] text-apagado">{rating ? `${rating.count} reseñas en Google` : '[N] reseñas en Google'}</p>
+        </div>
+      </div>
+    </div>
+    <ul class="grid gap-3.5 lg:grid-cols-12 lg:gap-6">
+      {
+        items.map((r, i) => (
+          <li class={`flex flex-col justify-between gap-8 ${i === 0 ? 'bg-superficie p-6 lg:col-span-7 lg:row-span-2 lg:p-10' : 'border-t border-claro/14 pt-5 lg:col-span-5'}`}>
+            <p class={r.text.startsWith('[') ? 'font-mono text-[15px] leading-relaxed text-amarillo' : i === 0 ? 'text-xl leading-relaxed lg:text-[26px]' : 'text-lg leading-relaxed'}>{r.text}</p>
+            <div class={i === 0 ? 'border-t border-claro/12 pt-4' : ''}>
+              <p class="font-bold">{r.author}</p>
+              <p class="font-mono text-[13px] text-etiqueta">{r.vehicle}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+    {rating && <div><a href={rating.url} class="inline-flex min-h-12 items-center gap-2.5 border-b border-amarillo/60 font-semibold">Ver todas en Google</a></div>}
+  </div>
+</section>

@@ -5,6 +5,7 @@ import logo from '../assets/brand/logo.png';
 import { site, WHATSAPP_GREETING } from '../data/site';
 import { NAV } from '../data/nav';
 import { buildWhatsAppUrl } from '../lib/whatsapp';
+import { groupSchedule } from '../lib/hours';
 const wa = buildWhatsAppUrl(site.whatsappNumber, WHATSAPP_GREETING);
 const year = new Date().getFullYear();
 ---
@@ -23,6 +24,10 @@ const year = new Date().getFullYear();
       <div>
         <p class="mb-2.5 font-mono text-[13px] text-etiqueta">Dirección</p>
         <p class="text-base leading-relaxed">{site.address.street}<br />{site.address.city}, Ecuador</p>
+        <p class="mt-5 mb-2.5 font-mono text-[13px] text-etiqueta">Horario</p>
+        <ul class="text-[15px] leading-relaxed text-apagado numeric">
+          {groupSchedule(site.schedule).map((row) => <li>{row.label}: {row.hours}</li>)}
+        </ul>
       </div>
       <div class="flex flex-col">
         <p class="mb-2.5 font-mono text-[13px] text-etiqueta">Contacto</p>
@@ -34,6 +39,6 @@ const year = new Date().getFullYear();
         </a>
       </div>
     </div>
-    <p class="border-t border-claro/8 pt-6 text-sm text-etiqueta numeric">{year} {site.name}, Guayaquil</p>
+    <p class="border-t border-claro/8 pt-6 text-sm text-etiqueta numeric">© {year} {site.name}, Guayaquil</p>
   </div>
 </footer>

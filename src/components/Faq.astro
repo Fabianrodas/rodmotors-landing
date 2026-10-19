@@ -1,0 +1,27 @@
+---
+/** Preguntas frecuentes. Las respuestas entre corchetes las confirma el negocio (el test LAUNCH las bloquea). */
+import { Icon } from 'astro-icon/components';
+import { site } from '../data/site';
+---
+
+<section class="bg-profundo px-5 py-14 lg:px-20 lg:py-28">
+  <div class="mx-auto flex max-w-[1280px] flex-col gap-8 lg:grid lg:grid-cols-12 lg:gap-6">
+    <div class="flex flex-col gap-3.5 lg:col-span-4 lg:gap-5">
+      <h2 class="titulo text-[32px] lg:text-[56px]">Preguntas frecuentes</h2>
+      <p class="text-base leading-relaxed text-apagado lg:text-[19px]">Si tu duda no está aquí, escríbenos por WhatsApp.</p>
+    </div>
+    <div class="lg:col-span-7 lg:col-start-6">
+      {
+        site.faq.map((item) => (
+          <details class="group border-t border-claro/14 last:border-b">
+            <summary class="flex min-h-16 cursor-pointer list-none items-center justify-between gap-6 py-4 text-lg font-bold lg:text-xl [&::-webkit-details-marker]:hidden">
+              {item.q}
+              <Icon name="ph:plus" class="size-5 shrink-0 text-amarillo transition-transform group-open:rotate-45" aria-hidden="true" />
+            </summary>
+            <p class={`pb-6 pr-10 leading-relaxed ${item.a.startsWith('[') ? 'font-mono text-[15px] text-amarillo' : 'text-base text-apagado lg:text-[17px]'}`}>{item.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

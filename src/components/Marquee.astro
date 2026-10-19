@@ -1,18 +1,22 @@
 ---
-const items = ['Livianos', 'Semipesados', 'Pesados', 'Todas las marcas', 'Diagnóstico computarizado', 'Alineación computarizada'];
+/** Marcas que atiende el taller. La etiqueta fija dice lo esencial; la cinta solo lo ilustra. */
+import { site } from '../data/site';
 ---
 
-<div class="flex h-[52px] items-center overflow-hidden bg-marca lg:h-[68px]" aria-hidden="true">
-  <div class="rm-march flex items-center text-base font-extrabold whitespace-nowrap text-claro lg:text-xl">
-    {
-      [0, 1].map(() =>
-        items.map((item) => (
-          <>
-            <span class="px-[18px] lg:px-7">{item}</span>
-            <span class="text-amarillo">/</span>
-          </>
-        )),
-      )
-    }
+<div class="relative flex h-[52px] items-stretch overflow-hidden bg-marca lg:h-[68px]">
+  <p class="relative z-10 flex shrink-0 items-center bg-profundo px-5 font-mono text-[13px] tracking-[0.06em] text-amarillo lg:px-20 lg:text-sm">Todas las marcas</p>
+  <div class="flex items-center overflow-hidden" aria-hidden="true">
+    <div class="rm-march flex items-center text-base font-extrabold whitespace-nowrap text-claro lg:text-xl">
+      {
+        [0, 1].map(() =>
+          site.brands.map((brand) => (
+            <>
+              <span class="px-[18px] lg:px-7">{brand}</span>
+              <span class="text-amarillo">/</span>
+            </>
+          )),
+        )
+      }
+    </div>
   </div>
 </div>

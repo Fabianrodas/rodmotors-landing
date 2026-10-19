@@ -63,6 +63,17 @@ export interface SiteData {
   story: string[];
   /** Pendiente de confirmar con el negocio; se muestra como marcador. */
   parking: string | null;
+  /** Marcas que se nombran en la marquesina del inicio. */
+  brands: string[];
+  /** Proceso de trabajo, del diagnóstico a la entrega. */
+  process: { name: string; body: string }[];
+  /** Hitos de la historia. Lo que está entre corchetes lo tiene que completar el negocio. */
+  milestones: { year: string; text: string }[];
+  faq: { q: string; a: string }[];
+  /** Reseñas reales de Google, con permiso. Vacío = se muestran marcadores. */
+  reviews: { text: string; author: string; vehicle: string }[];
+  /** Calificación pública en Google, p. ej. "4,8". null = marcador. */
+  googleRating: { score: string; count: string; url: string } | null;
 }
 
 export const site: SiteData = {
@@ -155,9 +166,33 @@ export const site: SiteData = {
   ],
   story: [
     'Empezamos en [AÑO] como Tecnicentro 80, en la esquina de Av. del Maestro y Miguel Riofrío. [COMPLETAR: cómo empezó el taller y quién lo fundó.]',
-    'Hoy seguimos en el mismo lugar con otro nombre, Rod Motors, y con diagnóstico y alineación computarizada para livianos, semipesados y pesados.',
+    'Hoy seguimos en el mismo lugar, con otro nombre: Rod Motors.',
   ],
   parking: null,
+  // PENDIENTE DE CONFIRMAR: las marcas que más atienden.
+  brands: ['Chevrolet', 'Toyota', 'Hino', 'Isuzu', 'Kia', 'Hyundai', 'Nissan', 'Mitsubishi', 'Mazda', 'Ford'],
+  // PENDIENTE DE CONFIRMAR: que cotizan antes de reparar y avisan por WhatsApp.
+  process: [
+    { name: 'Diagnóstico', body: 'Escaneamos el vehículo y encontramos el origen de la falla.' },
+    { name: 'Cotización', body: 'Te explicamos qué tiene y cuánto cuesta antes de empezar.' },
+    { name: 'Reparación', body: 'Trabajamos solo con lo que apruebas.' },
+    { name: 'Entrega', body: 'Te avisamos por WhatsApp cuando está listo.' },
+  ],
+  milestones: [
+    { year: '[AÑO]', text: 'Abre Tecnicentro 80 en Av. del Maestro y Miguel Riofrío.' },
+    { year: '[AÑO]', text: '[COMPLETAR: otro hito del taller.]' },
+    { year: '[AÑO]', text: 'El taller pasa a llamarse Rod Motors.' },
+  ],
+  faq: [
+    { q: '¿Necesito cita?', a: '[CONFIRMAR: si atienden sin cita y si conviene escribir antes.]' },
+    { q: '¿Cuánto demora un diagnóstico?', a: '[CONFIRMAR: tiempo aproximado del diagnóstico computarizado.]' },
+    { q: '¿Me dan la cotización antes de reparar?', a: '[CONFIRMAR: cómo envían la cotización y cuándo empiezan.]' },
+    { q: '¿Los trabajos tienen garantía?', a: '[CONFIRMAR: garantía de mano de obra y de repuestos.]' },
+    { q: '¿Qué formas de pago aceptan?', a: '[CONFIRMAR: efectivo, transferencia, tarjeta.]' },
+    { q: '¿Atienden flotas de empresa?', a: '[CONFIRMAR: si trabajan con flotas y cómo facturan.]' },
+  ],
+  reviews: [],
+  googleRating: null,
 };
 
 export const serviceNames: string[] = site.serviceGroups.flatMap((group) => group.services.map((s) => s.name));
