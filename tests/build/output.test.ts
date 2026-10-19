@@ -84,7 +84,7 @@ describe('reglas anti plantilla (taste-skill)', () => {
   it.each(docs)('$path: no usa guiones largos ni cortos, ni emojis, en el texto visible', ({ doc }) => {
     const text = doc.querySelector('body')?.structuredText ?? '';
     expect(text).not.toMatch(/[—–]/);
-    expect(text.replace(/[©®]/g, "")).not.toMatch(/\p{Extended_Pictographic}/u);
+    expect(text.replace(/[©®]/g, '')).not.toMatch(/\p{Extended_Pictographic}/u);
   });
 
   it.each(docs)('$path: una sola etiqueta para la acción de agendar', ({ doc }) => {
@@ -102,11 +102,21 @@ describe('reglas anti plantilla (taste-skill)', () => {
     for (const doc of allDocs) expect(doc.querySelectorAll('[data-placeholder]')).toHaveLength(0);
   });
 
+  it('no deja marcadores entre corchetes ([AÑO], [CONFIRMAR: ...]) en el build de lanzamiento', () => {
+    if (!process.env.LAUNCH) return;
+    for (const { doc, path } of docs) {
+      const text = doc.querySelector('body')?.structuredText ?? '';
+      expect(text.match(/\[[^\]\n]{1,120}\]/g) ?? [], path).toEqual([]);
+    }
+  });
+
   it('las fotos y la imagen social tienen contenido real, no un color plano', async () => {
     if (!process.env.LAUNCH) return;
     const photos = new URL('../../src/assets/photos/', import.meta.url);
     const files = [
-      ...readdirSync(photos).map((name) => fileURLToPath(new URL(name, photos))),
+      ...readdirSync(photos)
+        .filter((name) => /\.(jpe?g|png|webp|avif)$/i.test(name))
+        .map((name) => fileURLToPath(new URL(name, photos))),
       fileURLToPath(new URL('../../public/og.jpg', import.meta.url)),
     ];
     for (const file of files) {
